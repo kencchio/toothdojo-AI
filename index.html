@@ -420,7 +420,102 @@ explain:"Don’t confuse the pipeline stages: tokenization splits text; embeddin
 stem:"An AI specialist is testing a chatbot that uses an embedding model to provide recommendations. The chatbot retrieves restaurant suggestions by comparing user queries to embeddings stored in Amazon Aurora PostgreSQL with the pgvector extension. The specialist types “good Japanese restaurants” into the chatbot.\n\nWhat would the embedding model generate?",
 choices:["A numerical representation of the phrase.","A summary of the user’s preferences based on the input.","An array of 1s and 0s indicating how relevant the request is to the context.","A sentiment score indicating how relevant the request is to the context."],answer:0,
 why:["An embedding model outputs a vector — a numerical representation of the phrase — that’s compared to stored vectors by similarity.","Summarization is a generative task, not what an embedding model returns.","Embeddings are dense real-valued vectors, not binary relevance flags.","Sentiment analysis is a different task and returns a score, not an embedding."],
-explain:"Embedding model in → vector out. Similarity search in pgvector then finds the nearest stored vectors."}
+explain:"Embedding model in → vector out. Similarity search in pgvector then finds the nearest stored vectors."},
+
+// ---------- Tutorials Dojo: Domain 3 set ----------
+{id:"td3-01",src:"td",domain:3,type:"multi",pick:3,
+stem:"Which capabilities are commonly associated with generative AI systems used in business environments? (Select THREE.)",
+choices:["Adaptability","Scalability","Personalization","Cross-domain performance","Customer lifetime value","Data efficiency"],answer:[0,1,2],
+why:["The capability of generative AI to adjust across different tasks, contexts, or domains without extensive retraining, so the same model stays useful as needs change.","The strength of generative AI to handle large volumes of data, requests, or workloads efficiently, so it stays practical as demand grows across an enterprise.","The ability to customize outputs — recommendations, marketing messages, support responses — based on individual user data and preferences.","A way of evaluating how well a system generalizes across different domains. It's a metric used to judge AI, not a capability the AI itself provides to a business.","A business metric measuring the total revenue expected from a customer over the relationship. It's an outcome you might track, not a capability of generative AI.","Concerns how effectively data is stored, retrieved, or used when developing and operating AI workloads — not a business capability generative AI hands users."],
+explain:"Generative AI's business value is usually summarized as personalized outputs, adaptability across tasks and domains, and scalability across large workloads."},
+
+{id:"td3-02",src:"td",domain:3,type:"match",
+stem:"An AI specialist is studying the capabilities of foundation models (FMs) to enhance the company's AI-driven solutions. These models can be fine-tuned for various tasks based on extensive pre-training on large datasets.\n\nMatch each description to the correct FM capability. (Select THREE.)",
+prompts:["It has the capability to identify objects, scenes, and other elements within images.","It can answer natural language questions and even write short scripts or articles in response to prompts.","It is designed for tasks like transcription and video captioning in various languages."],
+options:["Visual comprehension","Language processing","Speech to text","Hugging Face","Image classification","High-resolution image creation and editing","Document extraction","Language translation"],
+answer:[0,1,2],
+why:["Recognizes objects, scenes, and other elements inside images — exactly the capability described.","Understands and generates natural language, including answering questions or drafting short text on request.","Built for tasks like transcription and video captioning across languages.","A platform and community hub for sharing and exploring open-source models and datasets — not a capability of a foundation model itself.","A specific application built on top of visual comprehension, not a general FM capability in its own right.","A specific generative application (image generation), narrower than the general capability being tested here.","A specific downstream application, not one of the three general capabilities this question asks about.","Another specific downstream application of language capability, not the general skill named here."],
+explain:"Foundation models group into broad capabilities — visual comprehension, language processing, speech-to-text, code generation — and services like Amazon Bedrock give access to FMs with these capabilities from multiple providers."},
+
+{id:"td3-03",src:"td",domain:3,type:"single",
+stem:"A company is testing a model for generating text summaries and needs a metric to evaluate how well the summaries match human-created references.\n\nWhich metric is most appropriate for this evaluation?",
+choices:["BLEU (Bilingual Evaluation Understudy)","Customer satisfaction score","F1 Score","Recall-Oriented Understudy for Gisting Evaluation (ROUGE)"],answer:3,
+why:["Commonly used for machine translation; it measures precision of n-gram overlap and is less suited to summarization, which cares more about recall of key content.","Relies on subjective human survey feedback, not an automated, repeatable metric for comparing generated summaries with a reference text.","A general classification metric balancing precision and recall; it isn't built to score how well a summary captures a reference text's content.","Purpose-built to compare generated summaries against human references by measuring overlap of n-grams, word sequences, and word pairs, with a focus on recall of the reference content."],
+explain:"ROUGE was designed specifically for summarization evaluation; BLEU is the analogous metric for translation."},
+
+{id:"td3-04",src:"td",domain:5,type:"match",
+stem:"Match the appropriate AWS service or feature to each requirement related to building and securing a generative AI application using Amazon Bedrock. Each option can be used once, more than once, or not at all. (Select THREE.)",
+prompts:["Implement role-based access control for your AI application resources.","Define policies to prevent the generation of explicit or offensive content.","Encrypt data used for training and inference in your AI models."],
+options:["AWS Identity and Access Management (IAM)","Amazon Bedrock Content Guardrails","AWS Key Management Service (KMS)","AWS CloudTrail"],
+answer:[0,1,2],
+why:["Lets you define roles and policies that implement role-based access control over who can access or modify your AI application's resources.","Lets you configure policies — denied topics, content filters — that block explicit or offensive model output.","Manages the encryption keys used to protect training and inference data at rest and in transit.","Logs and monitors API calls for auditing. It doesn't manage access control, content policies, or encryption itself."],
+explain:"Pattern to memorize: access control → IAM, content safety → Guardrails, encryption → KMS, audit trail of API calls → CloudTrail."},
+
+{id:"td3-05",src:"td",domain:3,type:"single",
+stem:"An insurance company receives many paper-based claim forms from policyholders. These forms contain handwritten and printed information about accidents, medical treatments, and property damage. The company wants to automate the extraction of relevant data from these scanned documents to streamline its claims processing workflow.\n\nWhich AWS service should you recommend to achieve this goal?",
+choices:["Amazon Polly","Amazon Textract","Amazon Rekognition","Amazon Comprehend"],answer:1,
+why:["Converts text into lifelike speech — the opposite of what's needed here.","Automatically extracts text, handwriting, layout elements, and data such as form fields and tables from scanned documents, going beyond traditional OCR.","Focused on image and video analysis — object detection, faces, content moderation — not text or form-data extraction.","Analyzes text that already exists in digital form for sentiment, entities, and key phrases. It doesn't pull text out of scanned documents."],
+explain:"“Extract data from scanned/handwritten forms” is the trigger phrase for Amazon Textract."},
+
+{id:"td3-06",src:"td",domain:3,type:"multi",pick:3,
+stem:"A company has a recommender system that generates embeddings from customer interaction data to understand product relationships and user preferences. The goal is to enhance the system with semantic search capabilities to retrieve contextually similar product recommendations more efficiently.\n\nWhich AWS services are best suited for implementing vector search to optimize and scale the recommendation system? (Select THREE.)",
+choices:["Amazon OpenSearch Service","Amazon Redshift","Amazon Neptune ML","Amazon S3","Amazon QuickSight","Amazon DocumentDB (with MongoDB compatibility)"],answer:[0,2,5],
+why:["Supports k-NN search, letting you index and query embeddings for similarity search at scale.","A data warehouse built for complex analytical queries. Vector search would need custom UDFs, adding complexity and latency it isn't designed for.","Uses Graph Neural Networks to work with graph-structured data, including embeddings, for fast and accurate predictions.","Object storage. It can hold vector data as files but has no built-in indexing or similarity-search capability.","A business intelligence and visualization tool for dashboards and reports, not a vector search engine.","Supports vector search, letting you store, index, and query millions of vectors with millisecond response times."],
+explain:"AWS's core vector-capable stores include OpenSearch Service (k-NN), Aurora/RDS PostgreSQL with pgvector, Neptune ML, MemoryDB, and DocumentDB. Object storage, a data warehouse, and a BI tool aren't built for similarity search."},
+
+{id:"td3-07",src:"td",domain:3,type:"multi",pick:2,
+stem:"A company is building a mobile application that assists visually impaired users. The app must be able to convert printed text from images into spoken language. Users can take pictures of documents, handwritten notes, or product labels, and the app will read the content aloud. The application needs to be accurate, reliable, and efficient.\n\nWhich AWS services would you recommend for implementing this functionality? (Select TWO.)",
+choices:["Amazon Rekognition","Amazon Textract","Amazon Polly","Amazon Lex","Amazon Comprehend"],answer:[1,2],
+why:["Focused on image and video analysis such as face and object recognition — it doesn't extract text or synthesize speech.","An OCR service that extracts printed and handwritten text from images and PDFs — the first step, turning the picture into text.","Converts the extracted text into lifelike speech — the second step, reading the content aloud.","Builds conversational chat and voice interfaces using natural language understanding. It doesn't extract text from images or convert text to speech on its own.","Analyzes existing text for sentiment, entities, and key phrases. It doesn't address text-to-speech."],
+explain:"Pipeline: image → Textract (extract text) → Polly (speak it aloud)."},
+
+{id:"td3-08",src:"td",domain:3,type:"single",
+stem:"A development team is building a social media platform that allows users to upload images. They want to ensure that inappropriate content is filtered out.\n\nWhich Amazon Rekognition API can detect unsafe content in a specified JPEG or PNG format image?",
+choices:["DetectText","DetectModerationLabels","DetectFaces","DetectLabels"],answer:1,
+why:["Extracts text found in an image. It doesn't evaluate whether the image content itself is unsafe.","Purpose-built for content moderation — it analyzes an image and returns labels for unsafe or inappropriate content such as nudity or violence, with confidence scores.","Detects and analyzes faces in an image. It doesn't flag unsafe or inappropriate content.","Returns general objects and scenes detected in an image, not specifically moderation labels."],
+explain:"“Filter inappropriate/unsafe uploaded images” is the trigger for Rekognition's DetectModerationLabels API."},
+
+{id:"td3-09",src:"td",domain:3,type:"single",
+stem:"A company needs to label a large dataset of images with high accuracy to train a machine learning model. The company requires a solution combining human labeling with machine learning to ensure data quality. The company plans to use Amazon Augmented AI (A2I) for human review of low-confidence labels.\n\nWhich AWS solution will best meet this requirement?",
+choices:["Amazon SageMaker Autopilot","Amazon SageMaker Ground Truth","Amazon SageMaker Debugger","Amazon SageMaker Model Monitor"],answer:1,
+why:["Automates model building, selection, and tuning — it doesn't provide data-labeling workflows.","Provides human-in-the-loop data labeling and uses active learning so high-confidence examples can be auto-labeled while low-confidence ones go to human review — exactly the combination described.","Monitors and profiles training jobs for issues like vanishing gradients. It has nothing to do with labeling data.","Watches a deployed model's performance in production. It isn't a labeling tool."],
+explain:"“Combine human labeling with ML / active learning to reduce labeling effort” → SageMaker Ground Truth."},
+
+{id:"td3-10",src:"td",domain:3,type:"multi",pick:2,
+stem:"An ML engineer is tasked with forecasting the monthly revenue for a subscription-based service.\n\nWhich evaluation metrics should be used to assess the model's performance? (Select TWO.)",
+choices:["Accuracy","F1 score","InferenceLatency","Mean absolute error (MAE)","Mean absolute percentage error (MAPE)"],answer:[3,4],
+why:["A classification metric — it doesn't give meaningful insight into how close continuous revenue predictions are to actual values.","Balances precision and recall for classification problems; it doesn't apply to a continuous revenue forecast.","Measures how fast the model returns a prediction, not whether the prediction itself is accurate.","The average absolute difference between predicted and actual revenue — a direct, simple measure of forecast error.","Expresses that same error as a percentage of the actual value, which is easy to interpret for a revenue forecast."],
+explain:"Forecasting a continuous number (revenue) calls for regression metrics like MAE and MAPE, not classification metrics like accuracy or F1."},
+
+{id:"td3-11",src:"td",domain:3,type:"single",
+stem:"An AI specialist is developing a system to detect vehicles in street images using machine learning. The model employs a Support Vector Machine to identify vehicle objects. The goal is to create labels for a large dataset of street images and utilize human feedback to improve the model over time.\n\nWhich of the following options would be the most suitable for this task?",
+choices:["Amazon SageMaker Ground Truth","Amazon Comprehend","Amazon SageMaker built-in algorithms","Amazon Rekognition Custom Labels"],answer:0,
+why:["Provides human-in-the-loop capabilities for labeling large image datasets — including object-detection labeling such as bounding boxes — and lets human feedback feed into the workflow over time.","An NLP service for text. It has no role in labeling street images.","Provide training algorithms for models you already have data for; they don't create the image labels in the first place.","Built for training a custom image classifier from a predefined labeled dataset, not for running a human-feedback labeling workflow on a large unlabeled dataset."],
+explain:"“Create labels for a large dataset + involve human feedback over time” → SageMaker Ground Truth, which supports task types such as bounding box for object detection."},
+
+{id:"td3-12",src:"td",domain:3,type:"single",
+stem:"A marketing team plans to use Amazon Bedrock to generate personalized email content for different customer segments.\n\nWhat should the team do FIRST to get started with Amazon Bedrock?",
+choices:["Set up API credentials for access","Pick a suitable foundation model (FM)","Configure the output format for the generated content","Choose the input token limit for content generation"],answer:1,
+why:["Necessary before making API calls, but it isn't the first decision — you still need to know which model you're calling.","Choosing a model whose capabilities match the use case (personalized email content) comes first; everything else is configured around that choice.","Output formatting is set up after you've chosen a model capable of producing the content you need.","An inference parameter you tune once you already have a model selected — not the starting point."],
+explain:"With Amazon Bedrock, the first step for any use case is picking the foundation model that fits the task; credentials and parameters follow."},
+
+{id:"td3-13",src:"td",domain:3,type:"multi",pick:2,
+stem:"An organization is developing a conversational AI assistant using a large language model. The organization wants to incorporate human feedback to improve the model's responses and ensure they are appropriate and helpful.\n\nWhich steps are part of the RLHF (Reinforcement Learning from Human Feedback) approach? (Select TWO.)",
+choices:["Evaluating the model's performance using perplexity score","Unsupervised pre-training of the language model","Supervised fine-tuning of the regression model","Supervised fine-tuning of the language model","Creating a reward model"],answer:[3,4],
+why:["Perplexity measures how well a language model predicts the next token. It's a fluency metric, not a step in the RLHF pipeline.","Pre-training happens before RLHF, on a large unlabeled text corpus in an unsupervised way — a separate stage, not part of RLHF itself.","RLHF fine-tunes language models, not regression models, which predict numbers rather than generate text.","The language model is fine-tuned using the reward model and reinforcement learning so its responses better match human preferences.","Human raters compare model outputs, and a reward model is trained on those comparisons to predict which responses people prefer."],
+explain:"RLHF, at a high level: pre-train the LM (separate stage) → collect human preference comparisons → train a reward model → fine-tune the LM against that reward model with reinforcement learning."},
+
+{id:"td3-14",src:"td",domain:3,type:"single",
+stem:"A retail organization is building a machine-learning model for its customer support chatbot. They need to evaluate how closely the chatbot's responses match those of subject matter experts. The organization also wants to optimize the chatbot's speed of response.\n\nWhat is the most appropriate metric to evaluate the chatbot's response similarity to expert answers?",
+choices:["ROUGE-N","Metric for Evaluation of Translation with Explicit Ordering (METEOR)","Mean squared error (MSE)","BERTScore"],answer:3,
+why:["Measures overlap of n-grams between generated and reference text. It works well for summarization but misses deeper semantic similarity.","Scores translation-style precision and recall but doesn't use contextual embeddings, so it captures wording overlap more than meaning.","A regression metric for numeric predictions — it isn't built to compare two pieces of text.","Uses BERT embeddings to compare the meaning of the generated response and the reference answer, capturing semantic similarity beyond exact wording — the best fit for judging how closely a chatbot's answers match expert answers."],
+explain:"When wording can vary but meaning must match (chatbot vs. expert answers), the embedding-based BERTScore outperforms surface n-gram metrics like ROUGE or METEOR."},
+
+{id:"td3-15",src:"td",domain:3,type:"single",
+stem:"An ML engineer has trained several models using different algorithms and hyperparameters, including varying learningRate and batchSize configurations across training runs. These models need to be efficiently managed for deployment in a production environment.\n\nWhich solution should be used to catalog models, manage model versions, and associate metadata with the models?",
+choices:["Amazon SageMaker Feature Store","Amazon Elastic Container Registry","Amazon SageMaker Model Registry","AWS Glue"],answer:2,
+why:["Stores and manages feature data used for training and inference — not model artifacts or version metadata.","Stores and manages Docker container images. Useful for deployment, but it isn't built to catalog models or track training metadata.","Purpose-built to catalog models for production, manage versions, associate metadata such as training metrics, and manage approval status.","A data preparation and ETL service. It has no model-cataloging or version-management features."],
+explain:"“Catalog models, manage versions, associate metadata, control approval before deployment” → SageMaker Model Registry."}
 ];
 
 const AI_QUESTIONS = [
@@ -677,7 +772,147 @@ explain:"Trigger phrase: “limited labeled data, lots of unlabeled data” → 
 stem:"An operations team wants to detect unusual spikes in server metrics in near real time. The data has no labels identifying which points are anomalies.\n\nWhich SageMaker built-in algorithm is designed for this?",
 choices:["Random Cut Forest (RCF)","XGBoost","Linear Learner","Sequence-to-Sequence"],answer:0,
 why:["An unsupervised algorithm that assigns anomaly scores to data points without needing labels.","A supervised algorithm that needs labeled data.","Supervised regression/classification.","For translating sequences, such as text."],
-explain:"Anomaly detection with no labels → unsupervised → Random Cut Forest."}
+explain:"Anomaly detection with no labels → unsupervised → Random Cut Forest."},
+
+// ---------- AI-generated: Domain 3 (Applications of Foundation Models) ----------
+{id:"ai3-01",src:"ai",domain:3,type:"single",
+stem:"A startup needs access to several foundation models — Claude, Titan, Llama, and Mistral — through one managed API, without provisioning any infrastructure, and wants to start building immediately.\n\nWhich AWS service is the best fit?",
+choices:["Amazon SageMaker","Amazon Bedrock","Amazon Comprehend","Amazon Kendra"],answer:1,
+why:["Built for training and deploying custom ML models with full lifecycle control — more infrastructure and setup than this use case needs.","Gives access to multiple FM providers behind a single managed API with no infrastructure to run — exactly this scenario.","A narrow, pre-trained NLP service for tasks like sentiment analysis, not a foundation-model platform.","An enterprise search service; it doesn't provide access to foundation models."],
+explain:"Whenever a question says “access an FM quickly, no infrastructure,” the managed-first bias points to Bedrock over SageMaker."},
+
+{id:"ai3-02",src:"ai",domain:3,type:"single",
+stem:"A team already has a large labeled dataset and wants to train a custom traditional ML model with full control over the algorithm, training code, and hyperparameters.\n\nWhich AWS service is the best fit?",
+choices:["Amazon Bedrock","Amazon SageMaker","Amazon Q Business","Amazon Personalize"],answer:1,
+why:["Provides access to pre-trained foundation models through a managed API — it doesn't offer full control over a custom training pipeline.","Covers the full ML lifecycle — data prep, custom algorithms, training code, hyperparameter tuning, and deployment — matching the need for full control.","An enterprise assistant built on top of a foundation model. It doesn't train custom models.","A managed recommendation service, not a general custom-model training platform."],
+explain:"“Own labeled data, custom algorithm, full lifecycle control” is the SageMaker trigger, versus Bedrock's “fast access to a foundation model” trigger."},
+
+{id:"ai3-03",src:"ai",domain:3,type:"match",
+stem:"Match each requirement in the SageMaker ML lifecycle to the SageMaker capability that addresses it. (Select THREE.)",
+prompts:["Visually clean and transform data before training, with built-in bias detection during data prep","Use human annotators, aided by active learning, to label a large unlabeled dataset","Store and share ML features online (low latency) and offline (batch) so they stay consistent between training and inference"],
+options:["SageMaker Data Wrangler","SageMaker Ground Truth","SageMaker Feature Store","SageMaker Debugger","SageMaker Model Registry"],
+answer:[0,1,2],
+why:["A visual interface for cleaning, transforming, and detecting bias in data before training.","Provides human-in-the-loop labeling and uses active learning to reduce the manual labeling effort over time.","A central repository with an online store for low-latency inference and an offline store for training, keeping features consistent between the two.","Monitors training jobs in real time for problems such as vanishing gradients — it doesn't prepare data, label it, or store features.","Tracks model versions and approval status for deployment — unrelated to data prep, labeling, or feature storage."],
+explain:"Group SageMaker tools by lifecycle stage: prepare/label (Data Wrangler, Ground Truth, Feature Store) → build/train (Studio, Autopilot, JumpStart, Debugger, HPO) → deploy → monitor/govern (Model Monitor, Clarify, Model Registry, Pipelines, Model Cards)."},
+
+{id:"ai3-04",src:"ai",domain:3,type:"single",
+stem:"A company deployed a fraud-detection model to a SageMaker endpoint. Six months later, the team wants to know whether the relationship between the input data and fraud outcomes has changed enough that the model should be retrained.\n\nWhich SageMaker capability directly addresses this?",
+choices:["SageMaker Clarify","SageMaker Model Monitor","SageMaker Autopilot","SageMaker JumpStart"],answer:1,
+why:["Detects bias and explains predictions before or after training — it doesn't continuously watch a live endpoint for drift.","Continuously compares live production data and predictions against a training baseline to detect data quality, model quality, bias, and feature-attribution drift, and can trigger alerts.","Automates model building and tuning — it plays no role after deployment.","A hub of pre-trained models and solutions for quick deployment — unrelated to monitoring a live model."],
+explain:"Clarify answers “is this biased / why did it predict this”; Model Monitor answers “has anything changed since deployment.” Both matter for responsible AI, but only Model Monitor watches for drift over time."},
+
+{id:"ai3-05",src:"ai",domain:3,type:"single",
+stem:"A company wants its Bedrock-based chatbot to answer questions using the latest version of its internal knowledge-base articles, which change daily, without retraining or fine-tuning any model.\n\nWhich Bedrock feature should it use?",
+choices:["Provisioned Throughput","Knowledge Bases for Amazon Bedrock","Custom Model Import","Model Evaluation"],answer:1,
+why:["A pricing and capacity option for reserving guaranteed throughput — it has nothing to do with grounding answers in a knowledge base.","A fully managed RAG capability that connects to a vector store, retrieves relevant documents at query time, and injects them into the prompt — so answers stay current as the source documents change, with no retraining.","Lets you bring an already fine-tuned model into Bedrock; it doesn't retrieve or ground answers in changing documents.","Benchmarks or compares model outputs — it doesn't provide runtime retrieval of current information."],
+explain:"“Ground answers in frequently changing company data without retraining” is the classic trigger for RAG — implemented in Bedrock as Knowledge Bases."},
+
+{id:"ai3-06",src:"ai",domain:3,type:"single",
+stem:"A travel-booking company wants its Bedrock-based assistant to check flight availability and actually book a flight by calling the company's internal reservation API during the conversation.\n\nWhich Bedrock feature enables this?",
+choices:["Guardrails for Amazon Bedrock","Agents for Amazon Bedrock","Knowledge Bases for Amazon Bedrock","Batch inference"],answer:1,
+why:["Filters and controls what the model is allowed to say — it doesn't let the model call external APIs or take actions.","Lets a foundation model take multi-step actions, calling APIs or Lambda functions (action groups) and maintaining session state to complete a task like booking a flight.","Retrieves and injects reference documents into the prompt (RAG) — it doesn't call external systems to perform actions.","Runs large offline inference jobs asynchronously — unrelated to taking real-time actions during a conversation."],
+explain:"“The model needs to call APIs / take actions / complete multi-step tasks” → Agents for Amazon Bedrock."},
+
+{id:"ai3-07",src:"ai",domain:3,type:"single",
+stem:"A company must ensure its Bedrock-based support bot never discusses competitor pricing and automatically redacts any credit card numbers a customer types into the chat.\n\nWhich Bedrock feature should it configure?",
+choices:["Guardrails for Amazon Bedrock","Model Evaluation","Agents for Amazon Bedrock","Provisioned Throughput"],answer:0,
+why:["Supports denied topics and PII redaction, such as credit card numbers, as configurable content-filtering policies applied at runtime.","Benchmarks model quality; it doesn't filter or redact content in real time.","Orchestrates multi-step actions and API calls, not content filtering.","A capacity and pricing option, unrelated to content policy."],
+explain:"“Prevent the model from discussing X” and “redact PII from responses” are both textbook Guardrails triggers."},
+
+{id:"ai3-08",src:"ai",domain:3,type:"single",
+stem:"A company fine-tuned a Titan model in Amazon Bedrock and now wants to serve it in production with guaranteed, consistent throughput for a high, steady volume of requests.\n\nWhat must it do before it can serve traffic to this custom model?",
+choices:["Use On-Demand pricing","Purchase Provisioned Throughput","Run a new Model Evaluation job","Re-import the model using Custom Model Import"],answer:1,
+why:["On-Demand pricing works for many base models, but most fine-tuned or custom models in Bedrock require Provisioned Throughput before they can be served at all, not just for guaranteed capacity.","Reserves guaranteed throughput for consistent, high-volume traffic, and is generally required to serve a fine-tuned or custom model in Bedrock.","Evaluation compares model quality; it doesn't provision capacity for serving traffic.","The model was already made available when it was fine-tuned; re-importing doesn't provide throughput capacity."],
+explain:"Common exam gotcha: most fine-tuned or imported custom models in Bedrock need Provisioned Throughput before they can serve inference traffic."},
+
+{id:"ai3-09",src:"ai",domain:3,type:"single",
+stem:"Which Amazon Bedrock capability lets a company bring a foundation model it already fine-tuned outside of AWS and serve it through Bedrock's managed API?",
+choices:["Continued pre-training","Custom Model Import","Knowledge Bases","Model Evaluation"],answer:1,
+why:["A Bedrock customization method that adapts a model using unlabeled domain data — it doesn't bring in an already fine-tuned external model.","Lets you bring an already fine-tuned model into Bedrock to serve it through the same managed API as Bedrock's own models.","Provides managed RAG, not a way to host an externally trained model.","Benchmarks model outputs, not a hosting mechanism."],
+explain:"Custom Model Import is specifically for serving a model you already fine-tuned elsewhere."},
+
+{id:"ai3-10",src:"ai",domain:3,type:"single",
+stem:"A team wants to compare several foundation models in Amazon Bedrock before choosing one, using both automatic benchmark metrics and their own team's manual review of sample outputs.\n\nWhich Bedrock capability supports this?",
+choices:["Guardrails","Model Evaluation","Agents","Knowledge Bases"],answer:1,
+why:["Controls and filters model output; it doesn't compare models against each other.","Provides built-in evaluation jobs, either automatic (benchmark metrics) or human-based (your team reviews outputs), for comparing models before choosing one.","Lets a model take actions; unrelated to model comparison.","Retrieves documents for grounding responses; unrelated to comparing models."],
+explain:"Bedrock Model Evaluation supports both automatic and human evaluation job types."},
+
+{id:"ai3-11",src:"ai",domain:3,type:"single",
+stem:"A design team uses Amazon Titan Image Generator to create marketing images and needs a way to later verify that a given image was AI-generated by this service.\n\nWhich AWS capability supports this?",
+choices:["Guardrails contextual grounding checks","Invisible watermarking embedded by Titan Image Generator","SageMaker Model Cards","Amazon Rekognition content moderation"],answer:1,
+why:["Checks whether a model's text response is grounded in provided source data — a hallucination check, not an image-provenance feature.","Titan Image Generator embeds an invisible watermark by default in every image it creates, which can later be used to detect that the image was AI-generated by the service.","Documents a model's intended use and limitations; it doesn't mark individual generated images.","Flags unsafe or inappropriate image content; it doesn't identify whether an image was AI-generated."],
+explain:"Content-provenance / “how do we detect AI-generated images” questions point to Titan Image Generator's built-in watermarking."},
+
+{id:"ai3-12",src:"ai",domain:3,type:"single",
+stem:"A retail company wants an internal assistant that lets employees ask natural-language questions and get answers grounded in the company's internal wikis, documents, and ticketing system.\n\nWhich AWS service is purpose-built for this?",
+choices:["Amazon Q Developer","Amazon Q Business","Amazon Lex","Amazon Personalize"],answer:1,
+why:["A coding assistant focused on code suggestions, security scanning, and code transformation — not general enterprise document Q&A.","An enterprise assistant built to answer employee questions grounded in a company's internal data and documents.","Builds conversational chat and voice interfaces; it doesn't provide out-of-the-box enterprise document grounding the way Q Business does.","A recommendation engine, unrelated to answering internal questions."],
+explain:"Amazon Q Business = enterprise data assistant for employees; Amazon Q Developer = coding assistant. Both sit on top of Bedrock."},
+
+{id:"ai3-13",src:"ai",domain:3,type:"single",
+stem:"A software team wants an AI assistant embedded in their IDE that can suggest code, scan for security vulnerabilities, and help upgrade an application from an old Java version to a newer one.\n\nWhich AWS service fits this need?",
+choices:["Amazon Q Business","Amazon Q Developer","Amazon Kendra","Amazon Comprehend"],answer:1,
+why:["Focused on answering questions from internal company documents for business users, not a coding assistant.","A coding assistant (formerly CodeWhisperer) that provides code suggestions, security scanning, and code transformation, such as Java version upgrades.","An enterprise search service, not a coding assistant.","An NLP text-analysis service, not a code assistant."],
+explain:"Trigger words “code suggestions,” “security scanning,” and “Java version upgrade” all point to Amazon Q Developer."},
+
+{id:"ai3-14",src:"ai",domain:3,type:"single",
+stem:"A company is designing a RAG architecture on AWS and wants an intelligent enterprise search component to act as the retriever, sitting alongside Amazon Bedrock.\n\nWhich AWS service is commonly used for this role?",
+choices:["Amazon Kendra","Amazon Forecast","Amazon Personalize","AWS Trainium"],answer:0,
+why:["An intelligent enterprise search service that is commonly used as the retriever component in a RAG architecture alongside Bedrock.","A time-series forecasting service, unrelated to search or retrieval.","A recommendation service, not a document retriever.","A custom chip for training ML models, not a search or retrieval service."],
+explain:"Kendra is repeatedly paired with Bedrock in RAG questions as the retrieval half of the architecture."},
+
+{id:"ai3-15",src:"ai",domain:3,type:"single",
+stem:"A company wants to reduce the cost of training its own large models on AWS and also reduce the cost of running inference for its deployed models, using AWS's custom silicon.\n\nWhich pairing of chips is correct?",
+choices:["Trainium for inference, Inferentia for training","Trainium for training, Inferentia for inference","Both chips are used only for training","Both chips are used only for inference"],answer:1,
+why:["Reversed — Trainium is the training-focused chip and Inferentia is the inference-focused chip.","Trainium is purpose-built to reduce the cost of training large models; Inferentia is purpose-built to reduce the cost of running inference.","Inferentia is specifically designed for inference, not training.","Trainium is specifically designed for training, not only inference."],
+explain:"Trainium = training. Inferentia = inference. Both are AWS's answer to “how do we reduce training or inference cost.”"},
+
+{id:"ai3-16",src:"ai",domain:3,type:"match",
+stem:"Match each evaluation concept to what it measures. (Select FOUR.)",
+prompts:["Overlap of n-grams between generated and reference text, commonly used for machine translation","How confidently a language model predicts the next token in a sequence","Semantic similarity between generated and reference text using embeddings, useful when wording differs but meaning should match","Overlap of n-grams and sequences between generated and reference text, commonly used for summarization"],
+options:["BLEU","Perplexity","BERTScore","ROUGE","F1 score"],
+answer:[0,1,2,3],
+why:["N-gram precision overlap, the standard metric for translation quality.","Measures how confidently a model predicts the next token — lower means more confident predictions — a fluency measure, not a correctness measure.","Uses embeddings to compare semantic similarity, useful when the exact wording differs but the meaning should still match.","N-gram and sequence recall overlap, the standard metric for summarization quality.","The harmonic mean of precision and recall for classification tasks — not a text-generation quality metric, so it doesn't match any of the four descriptions here."],
+explain:"BLEU (translation) and ROUGE (summarization) both measure surface n-gram overlap and share the same blind spot: they penalize valid paraphrasing. Perplexity measures fluency, not correctness. BERTScore captures meaning through embeddings."},
+
+{id:"ai3-17",src:"ai",domain:3,type:"match",
+stem:"A team is evaluating the quality of a RAG (Retrieval-Augmented Generation) system. Match each quality concept to what it checks. (Select THREE.)",
+prompts:["Does the retrieval step fetch information from the right documents?","Does the generated answer stick to the retrieved context instead of making things up?","Does the generated answer actually address the user's original question?"],
+options:["Context relevance","Faithfulness","Answer relevance","Perplexity"],
+answer:[0,1,2],
+why:["Checks whether the retrieval step fetched the right documents for the query.","Checks whether the generated answer sticks to the retrieved context rather than hallucinating beyond it.","Checks whether the final answer actually addresses the user's question.","A general language-model fluency measure — it doesn't evaluate retrieval quality or grounding, so it doesn't fit any of these RAG-specific checks."],
+explain:"These three RAG-specific quality checks are conceptually testable even without memorizing a framework name: faithfulness, context relevance, and answer relevance cover grounding, retrieval quality, and answer usefulness separately."},
+
+{id:"ai3-18",src:"ai",domain:3,type:"order",steps:4,
+stem:"Rank the following Amazon Bedrock model customization approaches from the one that changes the model LEAST to the one that changes it MOST. (Select and order FOUR.)",
+items:["Prompt engineering","RAG using Knowledge Bases","Fine-tuning","Continued pre-training"],
+answer:[0,1,2,3],
+why:["Step 1 (least change). Only the input prompt changes; model weights are untouched.","Step 2. Grounds responses in retrieved data at query time; model weights are still untouched, but the model now has access to more information.","Step 3. Updates model weights using labeled data to change style, format, or behavior.","Step 4 (most change). Adapts the model's base knowledge using a large amount of unlabeled domain data, going further than a single fine-tuning pass."],
+explain:"Bedrock's customization ladder, in order of how much they change the model: prompt engineering → RAG → fine-tuning → continued pre-training."},
+
+{id:"ai3-19",src:"ai",domain:3,type:"single",
+stem:"A company hosts 200 lightweight ML models on SageMaker, each receiving very low individual traffic. Running one always-on endpoint per model would be costly and mostly idle.\n\nWhich SageMaker deployment option is designed for this scenario?",
+choices:["Multi-model endpoint","Real-time inference (one endpoint per model)","Batch transform","Asynchronous inference"],answer:0,
+why:["Hosts many models behind a single endpoint, loading them into memory on demand, which is cost-effective when each model sees low individual traffic.","Running a separate always-on endpoint per model wastes capacity when each model's traffic is low — the opposite of cost-effective here.","Processes a full dataset offline; it doesn't serve many independent low-traffic models behind one endpoint.","Built for large payloads or long-running single requests, not for hosting many small models cheaply."],
+explain:"“Many models, each with low individual traffic” is the trigger phrase for SageMaker multi-model endpoints."},
+
+{id:"ai3-20",src:"ai",domain:3,type:"single",
+stem:"A compliance team wants documentation that describes a deployed model's intended use, limitations, training data, and risk considerations, to support an internal audit.\n\nWhich SageMaker capability provides this?",
+choices:["SageMaker Model Cards","SageMaker Clarify","SageMaker Pipelines","SageMaker Feature Store"],answer:0,
+why:["Purpose-built to document a model's intended use, limitations, training data, and risk considerations for governance and audit purposes.","Detects bias and explains individual predictions — useful for fairness, but it doesn't produce the descriptive documentation an audit needs.","Orchestrates and automates ML workflows — it doesn't generate model documentation.","Stores and serves ML features — unrelated to documenting a model for audit."],
+explain:"“Document model for governance/audit” is the trigger for SageMaker Model Cards."},
+
+{id:"ai3-21",src:"ai",domain:3,type:"single",
+stem:"A company wants to quickly deploy an open-source Llama model on infrastructure it fully controls, including a specific GPU instance type, because that exact model isn't available through Amazon Bedrock's provider list.\n\nWhich AWS service best fits this need?",
+choices:["Amazon Bedrock","Amazon SageMaker JumpStart","Amazon Q Developer","Amazon Comprehend"],answer:1,
+why:["Only offers a curated set of foundation models from AWS and its partners — if the specific open-source model isn't in that list, Bedrock can't serve it.","Hosts a wide range of pre-trained open-source models, including ones not available in Bedrock, and lets you deploy them on infrastructure and instance types you choose.","A coding assistant, unrelated to hosting open-source foundation models.","An NLP text-analysis service, unrelated to hosting foundation models."],
+explain:"When a question emphasizes infrastructure control, a specific instance type, or a model that isn't in Bedrock's provider list, SageMaker JumpStart — not Bedrock — is the answer."},
+
+{id:"ai3-22",src:"ai",domain:3,type:"single",
+stem:"A development team is calling Amazon Bedrock models from several different providers and wants to use the current, unified API that AWS recommends for standardizing conversation-style requests across all of them.\n\nWhich Bedrock API should they use?",
+choices:["InvokeModel","Converse API","Custom Model Import","Batch inference"],answer:1,
+why:["An older, single request/response API. It works, but AWS's newer, recommended API for standardized multi-turn conversation across providers is Converse.","The current, unified API that standardizes the conversation format across all Bedrock model providers, which AWS recommends for new development.","A way to bring in an externally fine-tuned model — not an inference API for standard conversation calls.","Runs large jobs asynchronously and non-interactively — not designed for interactive conversation."],
+explain:"Converse / ConverseStream is the newer, AWS-recommended unified API across Bedrock's model providers, superseding a plain InvokeModel call for conversational use cases."}
 ];
 
 </script>
