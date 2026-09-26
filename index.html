@@ -48,24 +48,30 @@ button,select,input{font:inherit;color:inherit}
 .stat b{display:block;font-size:1.25rem;font-variant-numeric:tabular-nums}
 .stat span{font-size:.72rem;color:var(--navy-muted)}
 .stat.ok b{color:#6fd3a0}.stat.miss b{color:#f39a91}.stat.acc b{color:var(--amber)}
-.side h2{font-size:.95rem;margin:22px 0 10px;font-weight:600}
+.side h2{font-size:.88rem;margin:26px 0 10px;font-weight:600;color:var(--navy-ink);padding-top:14px;border-top:1px solid var(--navy-2)}
+.side h2:first-of-type{border-top:0;padding-top:0}
 .seg{display:grid;grid-template-columns:repeat(3,1fr);background:var(--navy-2);border-radius:9px;padding:3px;gap:3px}
 .seg button{border:0;background:transparent;color:var(--navy-muted);padding:8px 4px;border-radius:7px;cursor:pointer;font-size:.82rem;line-height:1.2}
 .seg button small{display:block;font-size:.7rem;opacity:.8}
 .seg button[aria-pressed="true"]{background:var(--amber);color:#1b1204;font-weight:600}
 .side select{width:100%;background:var(--navy-2);border:1px solid #33496a;border-radius:8px;padding:9px 10px;color:var(--navy-ink)}
-.toggle{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 0;font-size:.9rem;cursor:pointer}
+.toggle{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 0;font-size:.9rem;cursor:pointer;border-bottom:1px solid var(--navy-2)}
+.toggle:last-of-type{border-bottom:0}
 .toggle input{appearance:none;width:38px;height:22px;background:#33496a;border-radius:11px;position:relative;cursor:pointer;flex:none;transition:background .15s}
 .toggle input::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .15s}
 .toggle input:checked{background:var(--amber)}
 .toggle input:checked::after{transform:translateX(16px)}
+.toggle-line{display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--navy-2)}
+.reshuffle{background:transparent;border:1px solid #33496a;color:var(--amber);font-size:.76rem;font-weight:600;padding:3px 9px;border-radius:99px;cursor:pointer;flex:none;visibility:hidden}
+.reshuffle:hover{border-color:var(--amber)}
 .legend{display:flex;gap:14px;font-size:.75rem;color:var(--navy-muted);margin-bottom:10px}
 .legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(36px,1fr));gap:6px}
 .grid button{height:34px;border-radius:7px;border:1px solid #33496a;background:transparent;color:var(--navy-ink);font-size:.8rem;cursor:pointer;font-variant-numeric:tabular-nums;position:relative}
+.grid button:hover{border-color:var(--amber)}
 .grid button.ok{background:#1d7a52;border-color:#1d7a52}
 .grid button.miss{background:#b43c34;border-color:#b43c34}
-.grid button.cur{box-shadow:0 0 0 2px var(--amber)}
+.grid button.cur{box-shadow:0 0 0 2px var(--amber);font-weight:700}
 .grid button.ai::after{content:"";position:absolute;top:3px;right:3px;width:5px;height:5px;border-radius:50%;background:var(--amber)}
 .grid-note{font-size:.72rem;color:var(--navy-muted);margin:8px 0 0}
 .empty-grid{font-size:.85rem;color:var(--navy-muted)}
@@ -80,6 +86,8 @@ button,select,input{font:inherit;color:inherit}
 /* Main */
 .main{padding:40px clamp(16px,5vw,64px) 64px;display:flex;justify-content:center}
 .card{width:100%;max-width:780px}
+.qtrack{height:4px;border-radius:2px;background:var(--line);margin-bottom:18px;overflow:hidden}
+.qtrack-fill{height:100%;background:var(--amber);border-radius:2px;transition:width .25s ease}
 .meta{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:16px;font-size:.85rem;color:var(--muted)}
 .qnum{font-weight:700;color:var(--ink);font-size:1rem;margin-right:6px}
 .tag{border:1px solid var(--line);border-radius:999px;padding:2px 10px;background:var(--surface)}
@@ -128,20 +136,27 @@ button,select,input{font:inherit;color:inherit}
 .kbd kbd{font-family:var(--sans);border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:0 5px;background:var(--surface)}
 .emptystate{padding:60px 0;text-align:center;color:var(--muted)}
 .emptystate h2{color:var(--ink)}
+@keyframes fadein{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.card.fade-in{animation:fadein .22s ease}
 
 /* Results */
 dialog{border:0;border-radius:14px;padding:0;max-width:640px;width:calc(100% - 32px);background:var(--surface);color:var(--ink);box-shadow:0 20px 60px rgba(10,20,40,.35)}
 dialog::backdrop{background:rgba(12,20,34,.55)}
 .dlg{padding:26px 28px;max-height:85vh;overflow:auto}
 .dlg h2{margin:0 0 4px;font-size:1.4rem}
-.big{font-size:2.6rem;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.1;margin:12px 0 2px}
+.scorepanel{display:flex;align-items:center;gap:22px;margin:18px 0 6px;flex-wrap:wrap}
+.ring{width:112px;height:112px;border-radius:50%;display:grid;place-items:center;flex:none}
+.ring-inner{width:84px;height:84px;border-radius:50%;background:var(--surface);display:grid;place-items:center;text-align:center;line-height:1.1}
+.ring-inner b{font-size:1.5rem;font-variant-numeric:tabular-nums}
+.ring-inner span{font-size:.72rem;color:var(--muted)}
+.scorepanel p{margin:0;color:var(--muted);max-width:32ch;font-size:.92rem}
 .bars{display:grid;gap:10px;margin:18px 0}
 .bar{display:grid;grid-template-columns:minmax(0,1fr) 64px;gap:4px 12px;font-size:.88rem}
 .bar .track{grid-column:1/-1;height:8px;background:var(--paper);border-radius:4px;overflow:hidden}
 .bar .fill{height:100%;background:var(--amber)}
 .bar .n{text-align:right;font-variant-numeric:tabular-nums;color:var(--muted)}
-.missed-list{margin:6px 0 0;padding-left:20px;font-size:.9rem}
-.missed-list button{background:none;border:0;padding:0;color:var(--focus);cursor:pointer;text-align:left;text-decoration:underline}
+.missed-list{margin:6px 0 0;padding:0;font-size:.9rem;display:grid;gap:2px}
+.missed-list button{background:none;border:0;padding:6px 0;color:var(--focus);cursor:pointer;text-align:left;text-decoration:underline;display:block;width:100%;line-height:1.4}
 .dlg .row{display:flex;justify-content:flex-end;gap:8px;margin-top:20px}
 
 @media (max-width:900px){
@@ -154,7 +169,7 @@ dialog::backdrop{background:rgba(12,20,34,.55)}
   .ctrl[open] summary{margin-bottom:6px}
   .stats{margin-bottom:12px}
 }
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
 <body>
@@ -183,9 +198,14 @@ dialog::backdrop{background:rgba(12,20,34,.55)}
     <h2><label for="domainSel">Exam domain</label></h2>
     <select id="domainSel"></select>
 
-    <div style="margin-top:14px">
+    <h2>Session</h2>
+    <div>
       <label class="toggle">Show missed only <input type="checkbox" id="missedOnly"></label>
-      <label class="toggle">Shuffle choices <input type="checkbox" id="shuffle"></label>
+      <div class="toggle-line">
+        <label class="toggle" style="flex:1;border-bottom:0"><span>Shuffle question order</span><input type="checkbox" id="shuffleQ"></label>
+        <button class="reshuffle" id="reshuffleBtn" type="button">New order</button>
+      </div>
+      <label class="toggle">Shuffle answer order <input type="checkbox" id="shuffle"></label>
     </div>
 
     <h2>Questions</h2>
@@ -669,7 +689,7 @@ const BY_ID=Object.fromEntries(ALL.map(q=>[q.id,q]));
 const KEY="aif-drill-v1";
 const LETTERS="ABCDEFGH";
 
-let store={answers:{},src:"all",domain:"all",missedOnly:false,shuffle:false,current:null};
+let store={answers:{},src:"all",domain:"all",missedOnly:false,shuffle:false,shuffleQ:false,qOrder:null,current:null};
 try{const s=JSON.parse(localStorage.getItem(KEY)||"null");if(s)store=Object.assign(store,s);}catch(e){}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(store));}catch(e){}}
 
@@ -683,9 +703,20 @@ function displayOrder(q,n){
   if(!orderCache[q.id]) orderCache[q.id]=shuffled(n);
   return orderCache[q.id];
 }
+function shuffledIds(){
+  const ids=ALL.map(q=>q.id);
+  for(let i=ids.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[ids[i],ids[j]]=[ids[j],ids[i]];}
+  return ids;
+}
+function baseList(){
+  if(store.shuffleQ&&Array.isArray(store.qOrder)&&store.qOrder.length===ALL.length){
+    return store.qOrder.map(id=>BY_ID[id]).filter(Boolean);
+  }
+  return ALL;
+}
 
 function filtered(){
-  return ALL.filter(q=>(store.src==="all"||q.src===store.src)
+  return baseList().filter(q=>(store.src==="all"||q.src===store.src)
     &&(store.domain==="all"||String(q.domain)===store.domain)
     &&(!store.missedOnly||(store.answers[q.id]&&!store.answers[q.id].correct)));
 }
@@ -712,7 +743,8 @@ function renderControls(){
   if(store.domain!=="all"&&!doms.includes(+store.domain)) store.domain="all";
   domainSel.innerHTML='<option value="all">All domains ('+srcPool.length+')</option>'+doms.map(d=>'<option value="'+d+'">Domain '+d+': '+DOMAINS[d]+' ('+srcPool.filter(q=>q.domain===d).length+')</option>').join("");
   domainSel.value=store.domain;
-  missedOnly.checked=store.missedOnly;shuffle.checked=store.shuffle;
+  missedOnly.checked=store.missedOnly;shuffle.checked=store.shuffle;shuffleQ.checked=store.shuffleQ;
+  reshuffleBtn.style.visibility=store.shuffleQ?"visible":"hidden";
 }
 
 function renderGrid(list){
@@ -728,6 +760,9 @@ function instruction(q){
   if(q.type==="match") return "Pick a match for each item from the dropdowns.";
   return "Choose an item for each step, in order.";
 }
+function typeLabel(q){
+  return {single:"Single choice",multi:"Multiple choice",match:"Matching",order:"Ordering"}[q.type];
+}
 
 function renderCard(){
   const list=filtered();
@@ -741,7 +776,9 @@ function renderCard(){
   const resp=done?done.resp:(draft[q.id]!==undefined?draft[q.id]:(q.type==="single"?null:q.type==="multi"?[]:q.type==="match"?q.prompts.map(()=>-1):Array(q.steps).fill(-1)));
   draft[q.id]=resp;
 
-  let h='<div class="meta"><span class="qnum">Question '+(idx+1)+' of '+list.length+'</span><span class="tag">Domain '+q.domain+': '+DOMAINS[q.domain]+'</span><span class="tag '+(q.src==="ai"?"src-ai":"")+'">'+(q.src==="ai"?"AI-generated":"Tutorials Dojo")+'</span></div>';
+  const posPct=list.length>1?Math.round((idx/(list.length-1))*100):100;
+  let h='<div class="qtrack"><div class="qtrack-fill" style="width:'+posPct+'%"></div></div>';
+  h+='<div class="meta"><span class="qnum">Question '+(idx+1)+' of '+list.length+'</span><span class="tag">Domain '+q.domain+': '+DOMAINS[q.domain]+'</span><span class="tag">'+typeLabel(q)+'</span><span class="tag '+(q.src==="ai"?"src-ai":"")+'">'+(q.src==="ai"?"AI-generated":"Tutorials Dojo")+'</span></div>';
   h+='<div class="stem">'+paras(q.stem)+'</div><p class="instr">'+instruction(q)+'</p>';
 
   if(q.type==="single"||q.type==="multi"){
@@ -784,7 +821,10 @@ function renderCard(){
   else h+='<button class="btn primary" id="checkBtn" '+(ready?"":"disabled")+'>Check answer</button>';
   h+='<button class="btn '+(done?"primary":"")+'" id="nextBtn" '+(idx===list.length-1?"disabled":"")+'>Next</button></div>';
   h+='<p class="kbd"><kbd>←</kbd> <kbd>→</kbd> move between questions · <kbd>A</kbd>–<kbd>E</kbd> pick a choice · <kbd>Enter</kbd> check answer</p>';
+  card.classList.remove("fade-in");
   card.innerHTML=h;
+  void card.offsetWidth;
+  card.classList.add("fade-in");
 
   // events
   card.querySelectorAll(".choice").forEach(b=>b.onclick=()=>{
@@ -818,6 +858,8 @@ document.querySelectorAll("#srcSeg button").forEach(b=>b.onclick=()=>{store.src=
 domainSel.onchange=()=>{store.domain=domainSel.value;save();renderCard();};
 missedOnly.onchange=()=>{store.missedOnly=missedOnly.checked;save();renderCard();};
 shuffle.onchange=()=>{store.shuffle=shuffle.checked;for(const k in orderCache)delete orderCache[k];save();renderCard();};
+shuffleQ.onchange=()=>{store.shuffleQ=shuffleQ.checked;if(store.shuffleQ)store.qOrder=shuffledIds();save();renderControls();renderCard();};
+reshuffleBtn.onclick=()=>{store.qOrder=shuffledIds();save();renderCard();};
 grid.onclick=e=>{const b=e.target.closest("button[data-id]");if(!b)return;store.current=b.dataset.id;save();renderCard();if(window.innerWidth<=900){ctrl.open=false;card.scrollIntoView({behavior:"smooth"});}};
 resetBtn.onclick=()=>{if(!confirm("Clear all answers and start over?"))return;store.answers={};for(const k in draft)delete draft[k];save();renderCard();};
 
@@ -828,11 +870,13 @@ resultsBtn.onclick=()=>{
     return '<div class="bar"><span>'+esc(label)+'</span><span class="n">'+o.length+' / '+a.length+'</span><div class="track"><div class="fill" style="width:'+pct+'%"></div></div></div>';};
   const doms=[...new Set(pool.map(q=>q.domain))].sort();
   const missed=pool.filter(q=>store.answers[q.id]&&!store.answers[q.id].correct);
+  const pct=ans.length?Math.round(ok.length/ans.length*100):0;
   let h='<h2>Your results</h2><p style="margin:0;color:var(--muted)">'+ans.length+' of '+pool.length+' questions answered</p>';
-  h+='<div class="big">'+(ans.length?Math.round(ok.length/ans.length*100)+"%":"–")+'</div><p style="margin:0;color:var(--muted)">'+ok.length+' correct, '+(ans.length-ok.length)+' missed. AWS scales scores to 100–1,000 and requires 700 to pass, so aim for 80% or more here.</p>';
+  h+='<div class="scorepanel"><div class="ring" style="background:conic-gradient(var(--amber) '+(pct*3.6)+'deg, var(--line) 0deg)"><div class="ring-inner"><b>'+(ans.length?pct+"%":"–")+'</b><span>accuracy</span></div></div>';
+  h+='<p>'+ok.length+' correct, '+(ans.length-ok.length)+' missed. AWS scales scores to 100–1,000 and requires 700 to pass, so aim for 80% or more here.</p></div>';
   h+='<h3 style="margin:22px 0 0;font-size:1rem">By domain</h3><div class="bars">'+doms.map(d=>row("Domain "+d+": "+DOMAINS[d],pool.filter(q=>q.domain===d))).join("")+'</div>';
   if(store.src==="all") h+='<h3 style="margin:10px 0 0;font-size:1rem">By source</h3><div class="bars">'+row("Tutorials Dojo",pool.filter(q=>q.src==="td"))+row("AI-generated",pool.filter(q=>q.src==="ai"))+'</div>';
-  if(missed.length) h+='<h3 style="margin:10px 0 0;font-size:1rem">Missed questions</h3><ol class="missed-list">'+missed.map(q=>'<li><button data-id="'+q.id+'">'+esc(q.stem.split("\n\n").slice(-1)[0].slice(0,110))+'…</button></li>').join("")+'</ol>';
+  if(missed.length) h+='<h3 style="margin:10px 0 0;font-size:1rem">Missed questions</h3><div class="missed-list">'+missed.map(q=>'<button data-id="'+q.id+'">'+esc(q.stem.split("\n\n").slice(-1)[0].slice(0,110))+'…</button>').join("")+'</div>';
   h+='<div class="row">'+(missed.length?'<button class="btn" id="reviewMissed">Review missed only</button>':'')+'<button class="btn primary" id="closeRes">Close</button></div>';
   resultsBody.innerHTML=h;results.showModal();
   closeRes.onclick=()=>results.close();
