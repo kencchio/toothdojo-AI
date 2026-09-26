@@ -1,0 +1,855 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>AI Practitioner Drill</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☁️</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#eef1f5; --surface:#ffffff; --ink:#172230; --muted:#5a6878; --line:#d5dce5;
+  --navy:#1b2a41; --navy-2:#243752; --navy-ink:#e8eef6; --navy-muted:#9fb0c6;
+  --amber:#e08a12; --amber-ink:#8a4f00; --amber-soft:#fdf1df;
+  --ok:#1d7a52; --ok-soft:#e3f3ea; --miss:#b43c34; --miss-soft:#fbe8e6;
+  --focus:#2f6fd6;
+  --sans:"Instrument Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#11161d; --surface:#18202a; --ink:#e4e9f0; --muted:#9aa7b7; --line:#2b3644;
+  --navy:#0d1522; --navy-2:#172336; --amber-ink:#f3b35a; --amber-soft:#3a2a12;
+  --ok:#4cc38a; --ok-soft:#15301f; --miss:#f07a70; --miss-soft:#3a1b19; --focus:#7aa7f0;
+}}
+:root[data-theme="dark"]{
+  --paper:#11161d; --surface:#18202a; --ink:#e4e9f0; --muted:#9aa7b7; --line:#2b3644;
+  --navy:#0d1522; --navy-2:#172336; --amber-ink:#f3b35a; --amber-soft:#3a2a12;
+  --ok:#4cc38a; --ok-soft:#15301f; --miss:#f07a70; --miss-soft:#3a1b19; --focus:#7aa7f0;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button,select,input{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.layout{display:grid;grid-template-columns:320px minmax(0,1fr);min-height:100vh}
+
+/* Sidebar */
+.side{background:var(--navy);color:var(--navy-ink);padding:28px 24px 32px;position:sticky;top:0;height:100vh;overflow-y:auto}
+.kicker{color:var(--amber);font-size:.8rem;font-weight:600;letter-spacing:.02em;margin:0 0 6px}
+.side h1{font-size:1.75rem;line-height:1.15;margin:0 0 6px;font-weight:700;letter-spacing:-.01em}
+.side .sub{color:var(--navy-muted);font-size:.9rem;margin:0 0 22px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--navy-2);border-radius:10px;overflow:hidden;margin-bottom:24px}
+.stat{background:var(--navy);padding:10px 4px;text-align:center;border:1px solid var(--navy-2)}
+.stat b{display:block;font-size:1.25rem;font-variant-numeric:tabular-nums}
+.stat span{font-size:.72rem;color:var(--navy-muted)}
+.stat.ok b{color:#6fd3a0}.stat.miss b{color:#f39a91}.stat.acc b{color:var(--amber)}
+.side h2{font-size:.95rem;margin:22px 0 10px;font-weight:600}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);background:var(--navy-2);border-radius:9px;padding:3px;gap:3px}
+.seg button{border:0;background:transparent;color:var(--navy-muted);padding:8px 4px;border-radius:7px;cursor:pointer;font-size:.82rem;line-height:1.2}
+.seg button small{display:block;font-size:.7rem;opacity:.8}
+.seg button[aria-pressed="true"]{background:var(--amber);color:#1b1204;font-weight:600}
+.side select{width:100%;background:var(--navy-2);border:1px solid #33496a;border-radius:8px;padding:9px 10px;color:var(--navy-ink)}
+.toggle{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 0;font-size:.9rem;cursor:pointer}
+.toggle input{appearance:none;width:38px;height:22px;background:#33496a;border-radius:11px;position:relative;cursor:pointer;flex:none;transition:background .15s}
+.toggle input::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .15s}
+.toggle input:checked{background:var(--amber)}
+.toggle input:checked::after{transform:translateX(16px)}
+.legend{display:flex;gap:14px;font-size:.75rem;color:var(--navy-muted);margin-bottom:10px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(36px,1fr));gap:6px}
+.grid button{height:34px;border-radius:7px;border:1px solid #33496a;background:transparent;color:var(--navy-ink);font-size:.8rem;cursor:pointer;font-variant-numeric:tabular-nums;position:relative}
+.grid button.ok{background:#1d7a52;border-color:#1d7a52}
+.grid button.miss{background:#b43c34;border-color:#b43c34}
+.grid button.cur{box-shadow:0 0 0 2px var(--amber)}
+.grid button.ai::after{content:"";position:absolute;top:3px;right:3px;width:5px;height:5px;border-radius:50%;background:var(--amber)}
+.grid-note{font-size:.72rem;color:var(--navy-muted);margin:8px 0 0}
+.empty-grid{font-size:.85rem;color:var(--navy-muted)}
+.actions{display:grid;gap:8px;margin-top:24px}
+.btn{border:1px solid var(--line);background:var(--surface);padding:10px 16px;border-radius:9px;cursor:pointer;font-weight:600;font-size:.92rem}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.primary{background:var(--amber);border-color:var(--amber);color:#1b1204}
+.side .btn{background:var(--navy-2);border-color:#33496a;color:var(--navy-ink)}
+.side .btn.primary{background:var(--amber);border-color:var(--amber);color:#1b1204}
+.side .btn.ghost{background:transparent;color:var(--navy-muted)}
+
+/* Main */
+.main{padding:40px clamp(16px,5vw,64px) 64px;display:flex;justify-content:center}
+.card{width:100%;max-width:780px}
+.meta{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:16px;font-size:.85rem;color:var(--muted)}
+.qnum{font-weight:700;color:var(--ink);font-size:1rem;margin-right:6px}
+.tag{border:1px solid var(--line);border-radius:999px;padding:2px 10px;background:var(--surface)}
+.tag.src-ai{border-color:var(--amber);color:var(--amber-ink);background:var(--amber-soft)}
+.stem{font-family:var(--serif);font-size:1.14rem;line-height:1.6;margin:0 0 8px;max-width:70ch}
+.stem p{margin:0 0 .8em}
+.instr{font-size:.85rem;color:var(--muted);margin:0 0 16px}
+.choices{display:grid;gap:10px;margin:0;padding:0;list-style:none}
+.choice{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;padding:13px 15px;border:1.5px solid var(--line);border-radius:10px;background:var(--surface);cursor:pointer;line-height:1.45}
+.choice:hover:not(:disabled){border-color:var(--muted)}
+.choice .mark{flex:none;width:22px;height:22px;border:1.5px solid var(--muted);display:grid;place-items:center;font-size:.72rem;font-weight:700;color:var(--muted);margin-top:1px}
+.choice.radio .mark{border-radius:50%}.choice.check .mark{border-radius:5px}
+.choice.sel{border-color:var(--ink)}
+.choice.sel .mark{background:var(--ink);border-color:var(--ink);color:var(--surface)}
+.choice:disabled{cursor:default}
+.choice.right{border-color:var(--ok);background:var(--ok-soft)}
+.choice.right .mark{background:var(--ok);border-color:var(--ok);color:#fff}
+.choice.wrong{border-color:var(--miss);background:var(--miss-soft)}
+.choice.wrong .mark{background:var(--miss);border-color:var(--miss);color:#fff}
+.choice .body{flex:1;min-width:0}
+.why{display:block;font-family:var(--serif);font-size:.95rem;color:var(--muted);margin-top:6px;line-height:1.5}
+.why b{font-family:var(--sans);font-size:.8rem;color:var(--ink)}
+.matchrow{display:grid;grid-template-columns:minmax(0,1fr) minmax(180px,240px);gap:12px;align-items:center;padding:12px 14px;border:1.5px solid var(--line);border-radius:10px;background:var(--surface)}
+.matchrow + .matchrow{margin-top:10px}
+.matchrow.step{grid-template-columns:70px minmax(0,1fr)}
+.ctrl summary{display:none}
+.matchrow .p{line-height:1.45}
+.matchrow select{width:100%;padding:9px 10px;border-radius:8px;border:1.5px solid var(--line);background:var(--paper)}
+.matchrow.right{border-color:var(--ok);background:var(--ok-soft)}
+.matchrow.wrong{border-color:var(--miss);background:var(--miss-soft)}
+.fix{grid-column:1/-1;font-size:.88rem;color:var(--ok);font-weight:600}
+.pool{margin-top:20px;border-top:1px solid var(--line);padding-top:16px}
+.pool h3{font-size:.95rem;margin:0 0 10px}
+.pool ul{margin:0;padding:0;list-style:none;display:grid;gap:8px}
+.pool li{font-size:.92rem;padding:10px 12px;border-radius:8px;background:var(--surface);border:1px solid var(--line)}
+.pool li b{font-size:.85rem}
+.pool li .why{margin-top:3px}
+.feedback{margin-top:22px;border-left:4px solid var(--line);background:var(--surface);padding:14px 18px;border-radius:0 10px 10px 0}
+.feedback.ok{border-left-color:var(--ok)}.feedback.miss{border-left-color:var(--miss)}
+.feedback h3{margin:0 0 4px;font-size:1rem}
+.feedback.ok h3{color:var(--ok)}.feedback.miss h3{color:var(--miss)}
+.feedback p{font-family:var(--serif);margin:0;line-height:1.55}
+.nav{display:flex;gap:10px;justify-content:space-between;align-items:center;margin-top:26px;flex-wrap:wrap}
+.nav .spacer{flex:1}
+.kbd{font-size:.75rem;color:var(--muted);margin-top:18px}
+.kbd kbd{font-family:var(--sans);border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:0 5px;background:var(--surface)}
+.emptystate{padding:60px 0;text-align:center;color:var(--muted)}
+.emptystate h2{color:var(--ink)}
+
+/* Results */
+dialog{border:0;border-radius:14px;padding:0;max-width:640px;width:calc(100% - 32px);background:var(--surface);color:var(--ink);box-shadow:0 20px 60px rgba(10,20,40,.35)}
+dialog::backdrop{background:rgba(12,20,34,.55)}
+.dlg{padding:26px 28px;max-height:85vh;overflow:auto}
+.dlg h2{margin:0 0 4px;font-size:1.4rem}
+.big{font-size:2.6rem;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.1;margin:12px 0 2px}
+.bars{display:grid;gap:10px;margin:18px 0}
+.bar{display:grid;grid-template-columns:minmax(0,1fr) 64px;gap:4px 12px;font-size:.88rem}
+.bar .track{grid-column:1/-1;height:8px;background:var(--paper);border-radius:4px;overflow:hidden}
+.bar .fill{height:100%;background:var(--amber)}
+.bar .n{text-align:right;font-variant-numeric:tabular-nums;color:var(--muted)}
+.missed-list{margin:6px 0 0;padding-left:20px;font-size:.9rem}
+.missed-list button{background:none;border:0;padding:0;color:var(--focus);cursor:pointer;text-align:left;text-decoration:underline}
+.dlg .row{display:flex;justify-content:flex-end;gap:8px;margin-top:20px}
+
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  .side{position:static;height:auto}
+  .main{padding-top:24px}
+  .matchrow{grid-template-columns:1fr}
+  .matchrow.step{grid-template-columns:1fr}
+  .ctrl summary{display:block;cursor:pointer;font-weight:600;padding:10px 12px;background:var(--navy-2);border-radius:9px;margin-top:4px}
+  .ctrl[open] summary{margin-bottom:6px}
+  .stats{margin-bottom:12px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="side" aria-label="Quiz controls">
+    <p class="kicker">AWS AI Practitioner, AIF-C01</p>
+    <h1>AI Practitioner Drill</h1>
+    <p class="sub" id="subline"></p>
+
+    <div class="stats" role="group" aria-label="Progress">
+      <div class="stat"><b id="sAns">0</b><span>Answered</span></div>
+      <div class="stat ok"><b id="sOk">0</b><span>Correct</span></div>
+      <div class="stat miss"><b id="sMiss">0</b><span>Missed</span></div>
+      <div class="stat acc"><b id="sAcc">–</b><span>Accuracy</span></div>
+    </div>
+
+    <details class="ctrl" id="ctrl" open>
+    <summary>Filters and question map</summary>
+    <h2 id="srcLabel">Question source</h2>
+    <div class="seg" role="group" aria-labelledby="srcLabel" id="srcSeg">
+      <button data-src="all" aria-pressed="true">All<small id="cAll"></small></button>
+      <button data-src="td" aria-pressed="false">Tutorials Dojo<small id="cTd"></small></button>
+      <button data-src="ai" aria-pressed="false">AI-generated<small id="cAi"></small></button>
+    </div>
+
+    <h2><label for="domainSel">Exam domain</label></h2>
+    <select id="domainSel"></select>
+
+    <div style="margin-top:14px">
+      <label class="toggle">Show missed only <input type="checkbox" id="missedOnly"></label>
+      <label class="toggle">Shuffle choices <input type="checkbox" id="shuffle"></label>
+    </div>
+
+    <h2>Questions</h2>
+    <div class="legend"><span><i style="border:1px solid #33496a"></i>Unanswered</span><span><i style="background:#1d7a52"></i>Correct</span><span><i style="background:#b43c34"></i>Missed</span></div>
+    <div class="grid" id="grid"></div>
+    <p class="grid-note" id="gridNote"></p>
+
+    <div class="actions">
+      <button class="btn primary" id="resultsBtn">See results</button>
+      <button class="btn ghost" id="resetBtn">Reset progress</button>
+    </div>
+    </details>
+  </aside>
+
+  <main class="main">
+    <div class="card" id="card" aria-live="polite"></div>
+  </main>
+</div>
+
+<dialog id="results"><div class="dlg" id="resultsBody"></div></dialog>
+
+<script>
+const TD_QUESTIONS = [
+// ---------- Tutorials Dojo: Domain 1 set ----------
+{id:"td1-01",src:"td",domain:1,type:"single",
+stem:"A financial institution uses logistic regression to assess credit applications and predict the likelihood of default. The model analyzes historical customer data and identifies patterns without manual rule writing.\n\nWhat term refers to a branch of AI that enables systems to learn and make predictions based on data without being explicitly structured?",
+choices:["Object-oriented programming","Predictive analytics","Natural Language Processing (NLP)","Machine Learning"],answer:3,
+why:["A programming paradigm built around objects and classes. It structures software; it has nothing to do with learning from data.","Uses statistical techniques to forecast outcomes from historical data, but it does not inherently include the self-learning mechanism that defines ML. Tempting, but it’s a use of data, not the branch of AI.","A specific branch of AI focused on human language. The scenario is about learning from tabular credit data, not language.","ML is the branch of AI where algorithms learn patterns from data and apply them to new data without explicit instructions — exactly what the logistic regression model is doing."],
+explain:"Machine learning uses mathematical and statistical models to perform analysis without explicit rules. It learns from historical data and applies those patterns to predict outcomes for new, unseen data points."},
+
+{id:"td1-02",src:"td",domain:1,type:"single",
+stem:"An e-commerce company is developing a model using Amazon SageMaker to forecast the probability of a product being returned after purchase. The company owns a labeled dataset containing product categories, prices, customer reviews, and return status stored in an Amazon S3 bucket.\n\nWhat machine learning approach is most appropriate for this task?",
+choices:["Few-shot learning","Unsupervised learning","Supervised learning","Transfer learning"],answer:2,
+why:["Used when very little training data is available, so the model generalizes from a handful of examples. This company has a full labeled dataset.","Works on data without labels to find hidden groupings. Here the label (return status) is known, so there’s nothing to discover without it.","The dataset contains input features plus a known output label (return status). Learning the mapping from inputs to a known label is supervised learning.","Adapts a pre-trained model to a new task. The scenario is simply learning from a labeled dataset, which makes supervised learning the better fit."],
+explain:"Supervised learning trains on input–output pairs where the desired output is known. Trigger phrase: “labeled dataset” + “predict a specific outcome.”"},
+
+{id:"td1-03",src:"td",domain:1,type:"match",
+stem:"A streaming service wants to analyze its user data to improve content recommendations. The data science team needs to group users with similar viewing habits, identify common patterns in the types of shows watched together, and estimate how users’ preferences are spread across different genres.\n\nMatch each unsupervised learning approach the data science team must consider with its correct objective. (Select THREE.)",
+prompts:["To group users with similar viewing habits","To identify common patterns in the types of shows watched together","To estimate how users’ preferences are spread across different genres"],
+options:["Clustering","Association rule learning","Probability density","Dimensionality reduction","Neural network","Decision tree","Linear regression","Logistic regression"],
+answer:[0,1,2],
+why:["Groups similar data points together — the natural fit for grouping users by viewing habits.","Discovers associations between items that occur together (“people who watched X also watched Y”).","Estimates the probability distribution of the data — how preferences are spread across genres.","Reduces the number of features while keeping information. Useful preprocessing, but it doesn’t achieve any of the three stated objectives.","A supervised method in this context, requiring labeled data. The scenario is unsupervised.","Mainly used for supervised classification and regression.","A supervised technique that predicts a continuous output.","A supervised algorithm typically used for binary classification."],
+explain:"Unsupervised learning finds structure in unlabeled data: clustering (grouping), association rule learning (co-occurrence), and probability density estimation (distribution)."},
+
+{id:"td1-04",src:"td",domain:1,type:"multi",pick:2,
+stem:"A legal firm has a large collection of scanned legal documents and case files in PDF format. They need a system to automate text extraction, identify key elements like tables and forms, and analyze image content to minimize manual intervention.\n\nWhich AWS services will most efficiently meet the firm’s needs with LEAST operational management? (Select TWO.)",
+choices:["Amazon Textract","Amazon Rekognition","Amazon Kendra","Amazon Comprehend","Amazon Personalize"],answer:[0,1],
+why:["Extracts printed and handwritten text, forms, and tables from scanned documents, and understands document structure (key–value pairs, table cells). Covers the text/table/form requirement.","Analyzes image content — objects, scenes, text in images. Covers the “analyze image content” requirement.","An intelligent search service. It can index what Textract extracts, but it doesn’t perform extraction or image analysis itself.","NLP on text that already exists (sentiment, entities). It can’t pull text out of scanned images.","Builds recommendation systems. Unrelated to document processing."],
+explain:"Both are fully managed, pre-trained AI services — no model training or infrastructure, which is why they satisfy “LEAST operational management.”"},
+
+{id:"td1-05",src:"td",domain:1,type:"match",
+stem:"A technology company is working on multiple projects that require various machine learning models to solve distinct challenges, covering natural language processing, customer behavior prediction, and content creation for marketing.\n\nFor each use case, choose the most appropriate model type. Some model types may be used more than once. (Select FOUR.)",
+prompts:["Translate patents from English to French, including embedded images like technical diagrams","Predict customer subscription cancellations for a telecom provider based on historical usage data","Create innovative visual designs from text-based advertising briefs","Identify the sentiment behind customer feedback and social media posts"],
+options:["Generative AI model","Traditional ML model"],answer:[0,1,0,1],
+why:["Creates new content (text, images) and can translate between modalities. Needed when the output is a new artifact — translated multimodal documents or original visual designs.","Uses structured data and established algorithms to predict or classify. Churn prediction (classification on usage data) and sentiment identification (classification of text) produce labels, not new content."],
+explain:"Rule of thumb from the cheatsheet: output is a new artifact → GenAI; output is a label, category, or number → traditional ML."},
+
+{id:"td1-06",src:"td",domain:5,type:"match",
+stem:"A fintech company is developing an AI-based system for detecting fraudulent activities. It must implement security measures to ensure data integrity, safeguard user privacy, and comply with regulations.\n\nMatch each foundational security capability with its relevant strategy. Each capability should be selected once only. (Select THREE.)",
+prompts:["Ensures that visibility, secure access, and control over the data used for AI development and implementation are maintained","Implement real-time monitoring and anomaly detection tools to identify and respond to potential security incidents in AI workloads","Ensures that vulnerabilities are identified and addressed throughout the software development lifecycle for AI workloads"],
+options:["Data protection","Threat detection","Application security","Infrastructure protection"],answer:[0,1,2],
+why:["Safeguards sensitive data from unauthorized access: encryption, access restrictions, monitoring, and protection in transit and at rest.","Identifies and responds to potential threats in real time by monitoring AI applications for unusual activity and raising alerts.","Addresses vulnerabilities inside the software through code reviews, security testing, and vulnerability assessments across the development lifecycle.","Secures the systems and services that run AI workloads (endpoints, network and storage controls). Important, but it doesn’t match any of the three strategies described."],
+explain:"These map to the foundational security capabilities in the AWS security perspective of the Cloud Adoption Framework."},
+
+{id:"td1-07",src:"td",domain:1,type:"single",
+stem:"A healthcare insurance company manually extracts sensitive information from claims forms and accompanying attachments. This has led to significant delays for customers seeking benefits. The company wants to automate the extraction process to expedite claims handling.\n\nWhich AWS service will help meet the company’s objectives?",
+choices:["Amazon Textract","Amazon Personalize","Amazon Lex","Amazon Comprehend"],answer:0,
+why:["Extracts text and structured data from scanned documents, understanding forms, fields, checkboxes, and tables — built for claims-form processing.","A recommendation service. It doesn’t read documents.","Builds conversational chatbots. It doesn’t extract data from forms.","Analyzes text that is already machine-readable. It can’t perform OCR on scanned forms."],
+explain:"Trigger phrase “extract data from forms/scanned documents” → Amazon Textract."},
+
+{id:"td1-08",src:"td",domain:1,type:"single",
+stem:"An e-commerce company uses Amazon SageMaker to build an ML model for customer review segmentation. They need a feature for efficient data cleansing and preparation with minimal coding.\n\nWhich SageMaker feature should they use?",
+choices:["SageMaker Debugger","SageMaker Feature Store","SageMaker Data Wrangler","SageMaker Autopilot"],answer:2,
+why:["Monitors and profiles training jobs (overfitting, resource bottlenecks). No data cleansing capability.","A central repository to store, share, and reuse features. It stores features; it doesn’t clean raw data.","Provides a visual interface to import, clean, transform, and analyze data quality with little or no code.","Automates model building, selection, and tuning end to end. It doesn’t focus on data cleansing."],
+explain:"“Clean/transform data before training, minimal code” → SageMaker Data Wrangler."},
+
+{id:"td1-09",src:"td",domain:1,type:"single",
+stem:"A financial expert is building a model to predict the future value of a portfolio based on historical performance, asset allocation, and market trends. The prediction model will help in making investment decisions.\n\nWhich machine learning technique should be considered?",
+choices:["Anomaly detection","Dimensionality reduction","Linear regression","Probability density"],answer:2,
+why:["Identifies outliers or unusual patterns. It doesn’t predict a continuous value.","Reduces the number of features. It isn’t a prediction technique on its own.","A supervised technique that predicts a value on a continuous scale from one or more inputs — portfolio value is continuous.","Estimates how likely a variable is to fall within a range. It doesn’t predict a future value from historical inputs."],
+explain:"Predicting a continuous number (price, value, amount) from historical data → regression."},
+
+{id:"td1-10",src:"td",domain:1,type:"match",
+stem:"A financial services company is building a model to detect fraudulent transactions and is using Amazon SageMaker Pipelines to automate its ML workflow.\n\nChoose the appropriate SageMaker Pipelines step for each task. Each step should be selected only once. (Select FOUR.)",
+prompts:["Deploy the trained model to a hosting environment for inference","Train the machine learning model using the prepared data","Evaluate the trained model to ensure it meets the required performance standards","Preprocess the dataset, including feature engineering, to make it suitable for training"],
+options:["CreateModel","Training","QualityCheck","Processing","Computer Vision"],answer:[0,1,2,3],
+why:["Creates a deployable SageMaker model from trained artifacts, preparing it for inference.","Trains the model on the prepared data and produces model artifacts.","Checks the model against quality and performance baselines before it goes further.","Preprocesses and transforms raw data (including feature engineering) into a training-ready format.","Not a Pipelines step type — it’s a field of AI focused on visual data."],
+explain:"A SageMaker Pipeline is a DAG of steps; data dependencies between steps determine execution order."},
+
+{id:"td1-11",src:"td",domain:1,type:"match",
+stem:"Select the correct Amazon SageMaker AI inference option for each job. Each option may be selected one or more times. (Select THREE.)",
+prompts:["Use for low-latency workloads with predictable traffic patterns that need consistent latency characteristics and are always available","Ideal for synchronous workloads with spiky traffic patterns that can tolerate latency variations","Choose for processing large sets of data offline without requiring a persistent endpoint"],
+options:["Real-time Inference","Serverless Inference","Batch Inference","Asynchronous Inference"],answer:[0,1,2],
+why:["Persistent endpoint for low-latency, predictable traffic that must always be available.","Scales automatically and you pay only during requests; cold starts cause latency variation. Best for spiky or unpredictable traffic.","Runs offline over large datasets; you pay only for the job’s duration. No persistent endpoint.","Queues requests for large payloads or long processing times and can scale to zero. None of the three descriptions match it."],
+explain:"Read the traffic pattern: steady → real-time; spiky → serverless; bulk offline → batch; huge payload/long-running → asynchronous."},
+
+{id:"td1-12",src:"td",domain:1,type:"single",
+stem:"A financial company is using an AI model to identify potential loan defaults. To ensure the model works well in production, it must set up processes for capturing real-time data, comparing it with the training set, detecting performance issues, and generating alerts.\n\nWhich stage of the model development lifecycle should the company focus on?",
+choices:["Model Monitoring","Model Evaluation","Data Collection","Model Training"],answer:0,
+why:["Monitoring captures production data, compares it to the training baseline, applies rules to detect issues (data quality, model quality, bias drift, feature attribution drift), and sends alerts.","Happens during development using test data, not continuously in production.","Gathers data for training. It doesn’t watch model performance after deployment.","Develops the model before deployment. It doesn’t cover post-deployment performance."],
+explain:"“Compare production data with training data + alerts” is monitoring (in AWS terms, SageMaker Model Monitor)."},
+
+{id:"td1-13",src:"td",domain:1,type:"order",steps:3,
+stem:"A company wants to customize a foundation model using Amazon Bedrock.\n\nSelect and order the prerequisites for customizing a foundation model. Each step should be selected one time. (Select and order THREE.)",
+items:["Prepare the training dataset","Set the maximum tokens for model responses","Purchase Provisioned Throughput","Evaluate the results of model training","Configure AWS KMS keys","Create a fine-tuning or pre-training job"],
+answer:[0,5,2],
+why:["Step 1. Labeled data for fine-tuning or unlabeled data for continued pre-training must exist first.","An inference parameter set at invocation time, not a customization prerequisite.","Step 3. A customized model needs Provisioned Throughput before you can run inference on it.","Useful, but it happens after training and isn’t one of the three prerequisites asked for.","Optional encryption configuration — not a required step in the sequence.","Step 2. The customization job trains the model on your dataset."],
+explain:"Bedrock customization flow: prepare data → run the fine-tuning or continued pre-training job → purchase Provisioned Throughput to use the custom model."},
+
+{id:"td1-14",src:"td",domain:1,type:"single",
+stem:"A financial company has collected 2 years of daily transaction data stored in Amazon S3. To enhance liquidity management and financial planning, it plans to develop a model to forecast transaction volumes for the next 90 days.\n\nWhich type of algorithm should the company use?",
+choices:["Object2Vec algorithm","Linear Learner algorithm","Forecasting algorithm","Clustering algorithm"],answer:2,
+why:["Learns embeddings for pairs of objects (e.g., for recommendations). Not a time-series method.","Solves general regression/classification but isn’t designed to capture seasonality and trends in time series.","Predicts future values from historical time-series patterns. AWS offers this through SageMaker Canvas time-series forecasting.","Groups similar data points. It doesn’t predict future values."],
+explain:"Daily data over time + “next 90 days” = time-series forecasting."},
+
+{id:"td1-15",src:"td",domain:1,type:"single",
+stem:"An AI specialist is working with a deep-learning model in Amazon SageMaker. The model, which includes a softmax layer, is too large to fit into the memory of a single GPU, and the training dataset is also quite extensive.\n\nWhich SageMaker built-in option should the specialist use to handle training of large model sizes?",
+choices:["Model Parallelism","Pipe Mode","Incremental Training","Managed Spot Training"],answer:0,
+why:["Partitions the model across multiple GPUs so models too large for one GPU’s memory can train.","Streams data from S3 to speed up data loading. Helps with large datasets, not a model that won’t fit in GPU memory.","Continues training from an existing model artifact. Doesn’t address memory limits.","Uses spare EC2 capacity to cut training cost. Doesn’t solve the model-size problem."],
+explain:"“Model won’t fit on one GPU” → model parallelism (distributed training). “Dataset is huge, split it across workers” → data parallelism."},
+
+// ---------- Tutorials Dojo: Domain 2 set ----------
+{id:"td2-01",src:"td",domain:2,type:"single",
+stem:"A machine learning engineer is evaluating the performance of a generative model system used for customer support. The engineer needs to identify key performance metrics and optimize the model for better response accuracy and efficiency.\n\nWhich business metric would best evaluate the model’s performance?",
+choices:["AWS Customer Reviews","Customer satisfaction","Conversion rate","Average response time"],answer:1,
+why:["Not a metric for measuring a support system’s effectiveness.","CSAT reflects whether the support responses actually meet customer needs — the business outcome of a support model.","A sales/marketing metric. It doesn’t measure support quality.","An operational efficiency metric. Fast answers can still be wrong, so it doesn’t capture response accuracy."],
+explain:"Customer satisfaction (CSAT) measures how well a product or service meets expectations — the key business metric for a customer-support GenAI system."},
+
+{id:"td2-02",src:"td",domain:2,type:"order",steps:3,
+stem:"A company wants to implement a generative AI model using Amazon SageMaker to enhance its customer support chatbot. The model needs to be trained on a large dataset of customer interactions.\n\nSelect and order the correct steps. Each step should be selected one time or not at all. (Select and order THREE.)",
+items:["Create a training job in Amazon SageMaker.","Implement the model to the Amazon SageMaker endpoint.","Upload the dataset to Amazon S3.","Create an Amazon SageMaker notebook instance.","Configure the training job to use the dataset from Amazon S3.","Monitor the endpoint for real-time inference performance."],
+answer:[2,0,4],
+why:["Step 2. Once data is in S3, you create the training job.","Deployment comes after training and isn’t part of this three-step training sequence.","Step 1. SageMaker training reads data from S3, so it must be uploaded first.","Optional — you can create training jobs without a notebook instance.","Step 3. Point the job’s input channel at the S3 dataset so training can run.","Post-deployment activity, outside the training sequence."],
+explain:"SageMaker Training is fully managed: you supply data in S3 and a job configuration, and it handles the infrastructure."},
+
+{id:"td2-03",src:"td",domain:2,type:"match",
+stem:"A tech company is integrating various generative AI models to enhance its products and services.\n\nSelect the correct type of generative AI model for each requirement. Each model can be selected one or more times. (Select FOUR.)",
+prompts:["Generate detailed and contextually accurate technical documentation based on sparse input data","Create photorealistic images from abstract concepts described in text, with high fidelity and detail","Simultaneously analyze and generate content involving text, images, and audio for an immersive virtual assistant","A robust and adaptable model that can be fine-tuned for a wide range of tasks, including natural language understanding, image recognition, and predictive analytics"],
+options:["Large language model","Stable Diffusion model","Large multi-modal language model","Foundation model"],answer:[0,1,2,3],
+why:["Transformer-based deep learning models pre-trained on massive text data — ideal for generating technical documentation.","A generative model that produces photorealistic images from text and image prompts.","Processes and generates content across multiple modalities such as text, images, and audio.","Trained on broad, generalized, unlabeled data and adaptable to a wide array of tasks — the “adapt to many tasks” trigger."],
+explain:"The fourth item is the trap: “adaptable to a wide range of tasks” describes a foundation model, not specifically a multimodal one."},
+
+{id:"td2-04",src:"td",domain:2,type:"match",
+stem:"A company is developing a language model to assist with various text-generation tasks and wants to use different prompt engineering techniques.\n\nMatch each description to the prompt engineering technique. Each technique may be used once, more than once, or not at all. (Select THREE.)",
+prompts:["Use a prompt that includes several examples of the task to guide the model in producing accurate responses","Use a prompt that breaks down a complex task into smaller, logical steps for the model to follow","Use a prompt where the model performs a task based only on its general knowledge, without any examples provided"],
+options:["Few-shot prompting","Chain-of-thought prompting","Zero-shot prompting","Negative prompting"],answer:[0,1,2],
+why:["Provides contextual examples in the prompt to guide the expected output.","Divides a complex task into intermediate reasoning steps.","Gives the task with no examples; relies purely on knowledge from pre-training.","Tells the model what not to include. It doesn’t match any description here."],
+explain:"None of these techniques change model weights — they only change the input."},
+
+{id:"td2-05",src:"td",domain:2,type:"single",
+stem:"An e-commerce company is designing a chatbot to assist customers with product inquiries, order status updates, and troubleshooting.\n\nWhich capability of AI is most relevant for ensuring that the chatbot provides real-time responses to customer queries?",
+choices:["Responsiveness","Adaptability","Data Efficiency","Simplicity"],answer:0,
+why:["Generating content in real time with quick response times — exactly what “real-time responses” asks for.","About adjusting to new domains or tasks, not speed of response.","About learning from limited data. Unrelated to real-time replies.","Not a defined GenAI capability relevant to response speed."],
+explain:"Map the keyword: “real-time responses” → responsiveness."},
+
+{id:"td2-06",src:"td",domain:2,type:"single",
+stem:"A company uses a generative AI model to automate content creation for its social media posts. The model has been trained on topics including technology, fashion, and travel. The company has now expanded into the fitness industry.\n\nWhich capability of generative AI will be crucial for the model to adjust its output and generate relevant fitness-related content?",
+choices:["Scalability","Responsiveness","Creativity and exploration","Adaptability"],answer:3,
+why:["Handles growing volume. The problem here is a new domain, not more load.","About speed of response, not adjusting to a new topic.","Helps produce novel content, but the core need is shifting to a new domain.","Lets the model adjust its output to new domains and generate context-specific content — the fitness pivot."],
+explain:"Keyword: “new domain / adjust output” → adaptability."},
+
+{id:"td2-07",src:"td",domain:1,type:"match",
+stem:"A small e-commerce company wants to use machine learning to improve its churn prediction. It does not have a dedicated data science team and is looking for a low-code or no-code solution.\n\nMatch each requirement to the most suitable Amazon SageMaker feature. (Select THREE.)",
+prompts:["Start quickly with pre-built solutions and models to accelerate development","Prepare and transform data for machine learning models using an intuitive interface","Build ML models with no code by simply interacting with data and obtaining predictions"],
+options:["Amazon SageMaker JumpStart","Amazon SageMaker Data Wrangler","Amazon SageMaker Canvas","Amazon SageMaker Debugger","Amazon SageMaker Model Monitor"],answer:[0,1,2],
+why:["Offers pre-trained models and end-to-end solution templates you can deploy and customize quickly.","Visual interface to clean, transform, and visualize data without complex code.","No-code tool for business analysts to build models and generate predictions by interacting with data.","Monitors training jobs — not for building or preparing anything.","Watches deployed models for drift — not a build-stage tool."],
+explain:"No-code predictions → Canvas. Pre-built models/solutions → JumpStart. Visual data prep → Data Wrangler."},
+
+{id:"td2-08",src:"td",domain:2,type:"single",
+stem:"An ML specialist has created a foundation model for a customer support chatbot. The bot’s responses are accurate but don’t align with the company’s formatting. The specialist wants to adjust the responses to match the company’s branding without high costs.\n\nWhich method will fulfill these requirements in the most cost-efficient manner?",
+choices:["Prompt engineering","Hyperparameter tuning","Data preprocessing","Feature engineering"],answer:0,
+why:["Carefully crafted prompts with context, keywords, and instructions control tone, style, and format with no retraining — the cheapest option.","Requires retraining runs to optimize training settings. Costly, and it doesn’t target output formatting.","Prepares training data. Doesn’t change the behavior of an already-accurate model without retraining.","Creates model input features for training. Not a way to adjust an FM’s output style."],
+explain:"Quick behavior tweak, no training data, lowest cost → prompt engineering."},
+
+{id:"td2-09",src:"td",domain:2,type:"multi",pick:2,
+stem:"A company is considering implementing generative AI models to enhance its customer support system. The technical team is concerned about the potential disadvantages and limitations of using such models in production.\n\nWhat are some common challenges or drawbacks associated with using generative AI models? (Select TWO.)",
+choices:["Knowledge Cutoff","Low Recall","Hallucination","Fraud detection","Personalization"],answer:[0,2],
+why:["The model only knows what was in its training data up to a certain date, so it can give outdated answers.","A classification metric, not a characteristic limitation of generative models.","The model can produce plausible but false or fabricated content.","A use case for ML, not a drawback.","An advantage/use case of GenAI, not a drawback."],
+explain:"Classic GenAI limitations: hallucination, knowledge cutoff, non-determinism, cost at scale, and limited interpretability."},
+
+{id:"td2-10",src:"td",domain:2,type:"single",
+stem:"A retail company wants a chatbot to assist customers with product recommendations and order inquiries. The chatbot must use the product catalog and order history stored in Amazon S3. The company needs a fully managed service that handles natural language understanding powered by BERT-based models, model selection, and conversation flow with minimal setup and maintenance.\n\nWhich AWS service would be the MOST suitable choice?",
+choices:["Amazon Kendra","Amazon Transcribe","Amazon Q Business","Amazon Lex"],answer:3,
+why:["Intelligent enterprise search. It retrieves documents but doesn’t manage conversation flow.","Speech-to-text only.","An enterprise assistant for employees over internal company data — not a customer-facing chatbot with managed conversation flow.","Fully managed service for building conversational interfaces (chatbots, IVR) with built-in natural language understanding and conversation management."],
+explain:"“Customer-facing chatbot + conversation flow + fully managed” → Amazon Lex."},
+
+{id:"td2-11",src:"td",domain:2,type:"single",
+stem:"An organization plans to leverage generative AI to craft personalized marketing content for their campaigns.\n\nWhich foundational AI capability is essential to ensure generative AI’s effective and responsible use?",
+choices:["Governance Perspective","Security Perspective","Business Perspective","People Perspective"],answer:0,
+why:["Covers policies, oversight, and responsible-AI controls that ensure GenAI is used effectively and responsibly.","Focuses on protecting data and workloads — necessary, but “responsible use” points to governance.","Focuses on business outcomes and value. Doesn’t specifically ensure responsible use.","Focuses on skills and organizational change."],
+explain:"From the AWS Cloud Adoption Framework for AI: the governance perspective is where responsible, well-controlled AI use lives."},
+
+{id:"td2-12",src:"td",domain:2,type:"single",
+stem:"A travel agency needs to fine-tune a foundation model to assist customers with detailed trip planning, multi-turn conversations about travel preferences, and personalized recommendations. The agency requires the model to apply chain-of-thought reasoning to complex queries.\n\nWhich method will satisfy these requirements?",
+choices:["Zero-shot learning","Domain adaptation fine-tuning","Few-shot learning","Instruction-based fine-tuning"],answer:3,
+why:["Prompting without examples — not fine-tuning, and it won’t reliably teach multi-step task behavior.","Teaches domain vocabulary and knowledge. The need here is following detailed task instructions and reasoning steps.","A prompting technique, not fine-tuning.","Trains the FM on instruction/response pairs so it follows detailed guidance and handles complex, multi-turn, task-oriented work."],
+explain:"“Fine-tune + follow instructions / perform tasks” → instruction-based fine-tuning. “Fine-tune + industry jargon” → domain adaptation."},
+
+{id:"td2-13",src:"td",domain:2,type:"single",
+stem:"A project involves generating product descriptions for an e-commerce website using a dataset of existing product descriptions from the site. The goal is to produce domain-specific models tailored to the site’s catalog.\n\nWhich fine-tuning approach is most appropriate for adapting a pre-trained language model to generate product descriptions similar to those in the dataset?",
+choices:["Unsupervised pre-training","Transfer learning","Domain adaptation fine-tuning","Instruction-based fine-tuning"],answer:2,
+why:["Training from scratch on unlabeled data. Expensive and unnecessary when a pre-trained model exists.","A broad concept that fine-tuning falls under. Too general — not the specific approach asked for.","Adapts a pre-trained model to a specific domain using limited domain data (catalog language, terms), modifying its weights.","Teaches instruction-following, not the style and vocabulary of a specific catalog."],
+explain:"Domain-specific language, jargon, or style from your own data → domain adaptation fine-tuning."},
+
+{id:"td2-14",src:"td",domain:2,type:"single",
+stem:"A company is developing an application for document summarization using a large language model (LLM). They will use embeddings to help the model understand and process information more effectively.\n\nWhy are embeddings important for the LLM in generating accurate summaries?",
+choices:["They compress the entire document into a single text file.","They ensure the output words are in their base or root forms.","They convert textual content into numerical vectors that represent semantic meaning.","They break the text into smaller units, such as words or subwords, to assist in translation."],answer:2,
+why:["Embeddings are vectors, not text files.","That describes stemming/lemmatization.","Embeddings are numerical representations that capture meaning and relationships, so similar concepts sit close together in vector space.","That describes tokenization."],
+explain:"Don’t confuse the pipeline stages: tokenization splits text; embeddings turn tokens or text into meaning-bearing vectors."},
+
+{id:"td2-15",src:"td",domain:2,type:"single",
+stem:"An AI specialist is testing a chatbot that uses an embedding model to provide recommendations. The chatbot retrieves restaurant suggestions by comparing user queries to embeddings stored in Amazon Aurora PostgreSQL with the pgvector extension. The specialist types “good Japanese restaurants” into the chatbot.\n\nWhat would the embedding model generate?",
+choices:["A numerical representation of the phrase.","A summary of the user’s preferences based on the input.","An array of 1s and 0s indicating how relevant the request is to the context.","A sentiment score indicating how relevant the request is to the context."],answer:0,
+why:["An embedding model outputs a vector — a numerical representation of the phrase — that’s compared to stored vectors by similarity.","Summarization is a generative task, not what an embedding model returns.","Embeddings are dense real-valued vectors, not binary relevance flags.","Sentiment analysis is a different task and returns a score, not an embedding."],
+explain:"Embedding model in → vector out. Similarity search in pgvector then finds the nearest stored vectors."}
+];
+
+const AI_QUESTIONS = [
+{id:"ai1-01",src:"ai",domain:1,type:"single",
+stem:"A bank’s loan policy states: approve an application if the credit score is 700 or higher AND the debt-to-income ratio is below 36%. Otherwise, reject it. The bank wants to automate this decision.\n\nWhat is the MOST appropriate approach?",
+choices:["Train a binary classification model in Amazon SageMaker on past approvals","Implement the policy as deterministic rules in application code","Use a foundation model in Amazon Bedrock to decide each application","Use unsupervised clustering to group applicants into approve and reject"],answer:1,
+why:["The outcome is fully defined by a known rule. A model could only approximate it and would add cost, error, and explainability problems.","The logic is simple, fixed, and must be exactly auditable. A rule does it perfectly and cheaply — ML isn’t needed.","An FM is non-deterministic and far more expensive for a two-condition check.","Clustering discovers unknown groupings. The decision boundary is already known."],
+explain:"Exam trap: AI/ML isn’t always the answer. If a simple deterministic rule solves the problem, or exact auditable results are required, skip ML."},
+
+{id:"ai1-02",src:"ai",domain:1,type:"single",
+stem:"Which statement correctly describes the relationship between AI, machine learning (ML), deep learning, and generative AI?",
+choices:["Deep learning is a subset of ML, and ML is a subset of AI; generative AI is a subset of deep learning.","ML is a subset of deep learning, which is a subset of AI.","Generative AI and deep learning are separate fields that don’t overlap.","AI is a subset of ML that focuses on rule-based systems."],answer:0,
+why:["Correct nesting: AI ⊃ ML ⊃ deep learning ⊃ generative AI.","Reversed — deep learning sits inside ML, not the other way around.","Modern generative AI is built on deep learning (transformers, diffusion models).","AI is the umbrella term; ML is inside it."],
+explain:"Memorize the nesting, not synonyms: AI ⊃ ML ⊃ Deep Learning ⊃ GenAI."},
+
+{id:"ai1-03",src:"ai",domain:1,type:"single",
+stem:"A data scientist trains a model that achieves 99% accuracy on the training data but only 71% accuracy on the validation data.\n\nWhich issue does this MOST likely indicate?",
+choices:["Underfitting","Overfitting","Insufficient inference capacity","Concept drift"],answer:1,
+why:["Underfitting shows poor results on both training and validation data.","A large gap between excellent training and poor validation performance means the model memorized training noise (high variance).","Inference capacity affects latency, not accuracy on a validation set.","Concept drift happens in production over time, not between training and validation during development."],
+explain:"Overfitting fixes: more data, regularization, simpler model, early stopping, dropout."},
+
+{id:"ai1-04",src:"ai",domain:1,type:"single",
+stem:"A model performs poorly on both the training dataset and the test dataset.\n\nWhich action is MOST likely to improve the model?",
+choices:["Increase regularization strength","Reduce the number of training epochs","Increase model complexity or add more informative features","Remove features from the dataset"],answer:2,
+why:["Regularization constrains the model further — it helps overfitting, and would make underfitting worse.","Training less makes an underfit model learn even less.","Poor results on both sets means high bias (underfitting). A more expressive model or better features lets it capture the pattern.","Fewer features gives the model even less signal."],
+explain:"High bias = underfitting → add complexity, features, or training time."},
+
+{id:"ai1-05",src:"ai",domain:1,type:"single",
+stem:"A payments company builds a fraud detection model. Only 0.3% of transactions are fraudulent. Missing a fraudulent transaction is very costly to the business.\n\nWhich metric should the team prioritize when evaluating the model?",
+choices:["Accuracy","Precision","Recall","Mean absolute error (MAE)"],answer:2,
+why:["With 99.7% legitimate transactions, a model that flags nothing scores 99.7% accuracy. Misleading on imbalanced data.","Precision minimizes false alarms. The stated cost is on missed fraud, not false alarms.","Recall measures how many actual fraud cases the model catches — it minimizes false negatives, which is the costly error here.","A regression metric. This is a classification problem."],
+explain:"High cost of missing a positive → recall. High cost of a false alarm → precision. Need a balance → F1."},
+
+{id:"ai1-06",src:"ai",domain:1,type:"single",
+stem:"An email provider builds a spam classifier. Users complain most when legitimate emails are moved to the spam folder and missed.\n\nWhich metric should the team focus on improving?",
+choices:["Recall","Precision","Perplexity","R-squared"],answer:1,
+why:["Recall catches more spam but tolerates more false positives — the exact complaint.","Precision measures how many emails flagged as spam are actually spam. Raising it reduces legitimate emails sent to spam (false positives).","A language-model fluency metric, not a classification metric.","A regression goodness-of-fit metric."],
+explain:"False positive = legitimate email marked as spam. Minimizing false positives → precision."},
+
+{id:"ai1-07",src:"ai",domain:1,type:"single",
+stem:"A real estate company trains a model to predict home sale prices in dollars.\n\nWhich metric is MOST appropriate to evaluate this model?",
+choices:["F1 score","Area under the ROC curve (AUC)","Root mean squared error (RMSE)","Confusion matrix"],answer:2,
+why:["For classification, balancing precision and recall.","For classification, measuring class separation across thresholds.","Price is a continuous value, so this is regression. RMSE measures the typical size of prediction errors in the same units (dollars).","A table of TP/FP/TN/FN for classification."],
+explain:"Regression metrics: RMSE, MAE, R². Classification metrics: accuracy, precision, recall, F1, AUC."},
+
+{id:"ai1-08",src:"ai",domain:1,type:"match",
+stem:"Match each dataset to its data type. Each data type may be used once or not at all. (Select FOUR.)",
+prompts:["Hourly electricity consumption readings from smart meters over three years","Customer records with columns for age, income, region, and plan type","Chest X-ray scans from a hospital archive","Chat transcripts from customer support conversations"],
+options:["Time-series data","Tabular (structured) data","Image data","Text data","Audio data"],answer:[0,1,2,3],
+why:["Observations recorded in time order, where sequence and timing matter.","Rows and columns with a fixed schema — fits a database table.","Unstructured pixel data; typically handled with deep learning (computer vision).","Unstructured natural language; handled with NLP.","Sound recordings. None of the datasets are audio."],
+explain:"Unstructured data (images, text, audio) is where deep learning and GenAI shine; structured tabular data is the home of classic algorithms like XGBoost."},
+
+{id:"ai1-09",src:"ai",domain:1,type:"single",
+stem:"A telecom company wants to score all 12 million customers for churn risk every night. Results are loaded into a dashboard the next morning. There is no need for immediate responses.\n\nWhich SageMaker inference option is MOST cost-effective?",
+choices:["Real-time inference endpoint","Batch transform","Serverless inference","Asynchronous inference"],answer:1,
+why:["Keeps an always-on endpoint running for traffic that only occurs once a night.","Runs inference over an entire dataset offline, with no persistent endpoint, and you pay only for the job.","Designed for request/response traffic that’s intermittent. Twelve million requests is bulk offline work.","Meant for individual large payloads or long-running requests, not scoring a full dataset."],
+explain:"Large dataset + no urgency + no persistent endpoint → batch transform."},
+
+{id:"ai1-10",src:"ai",domain:1,type:"single",
+stem:"An online retailer needs to check each payment for fraud during checkout. Traffic is steady and high throughout the day, and each prediction must be returned in milliseconds.\n\nWhich SageMaker inference option should be used?",
+choices:["Batch transform","Asynchronous inference","Real-time inference","Serverless inference"],answer:2,
+why:["Offline processing — can’t respond during checkout.","Queues requests and returns results later. Not suitable for millisecond responses.","A persistent, auto-scaling endpoint delivers consistent low latency for steady traffic.","Cold starts cause latency variation, and steady high traffic removes its scale-to-zero cost advantage."],
+explain:"Steady traffic + consistent low latency → real-time endpoint."},
+
+{id:"ai1-11",src:"ai",domain:1,type:"single",
+stem:"A media company runs a model that analyzes uploaded video files up to 1 GB in size. Processing takes several minutes per file. Users can wait for results, and the company wants to scale to zero when there are no uploads.\n\nWhich SageMaker inference option fits BEST?",
+choices:["Real-time inference","Serverless inference","Asynchronous inference","Multi-model endpoint"],answer:2,
+why:["Has payload and timeout limits unsuitable for 1 GB files and multi-minute processing, and it doesn’t scale to zero.","Has small payload and short timeout limits.","Queues requests, supports large payloads and long processing times, and can scale to zero instances when idle.","Hosts many models on one endpoint to save cost. Doesn’t address large payloads or long processing."],
+explain:"Huge payload + long processing + near-real-time is fine → asynchronous inference."},
+
+{id:"ai1-12",src:"ai",domain:1,type:"order",steps:6,
+stem:"Select and order the phases of the machine learning development lifecycle. Each item should be selected one time or not at all. (Select and order SIX.)",
+items:["Deploy the model","Collect, clean, and prepare the data","Monitor the model in production","Define the business goal and frame the ML problem","Evaluate the model against held-out data","Purchase Provisioned Throughput","Train and tune the model"],
+answer:[3,1,6,4,0,2],
+why:["Step 5. Put the approved model into production (real-time, batch, edge).","Step 2. Gather, clean, label, and transform data.","Step 6. Watch for drift and quality degradation; feed back into retraining.","Step 1. Define the problem and success metric before touching data.","Step 4. Validate performance on data the model hasn’t seen.","A Bedrock pricing option, not a lifecycle phase.","Step 3. Choose an algorithm and fit the model; tune hyperparameters."],
+explain:"Frame → Prepare data → Train → Evaluate → Deploy → Monitor. It’s a loop: monitoring findings trigger retraining."},
+
+{id:"ai1-13",src:"ai",domain:1,type:"single",
+stem:"A manufacturing company has 200,000 unlabeled photos of circuit boards. It needs human annotators to draw bounding boxes around defects to create a training dataset, and wants to reduce labeling cost over time.\n\nWhich AWS service should it use?",
+choices:["Amazon Rekognition","Amazon SageMaker Ground Truth","Amazon Augmented AI (Amazon A2I)","Amazon SageMaker Clarify"],answer:1,
+why:["Pre-trained image analysis. It doesn’t produce custom labeled training datasets with human annotators.","Builds labeled training datasets using human workers, and can use active learning to auto-label easier items and reduce cost.","Adds human review of model predictions in production — not dataset labeling for training.","Detects bias and explains predictions. No labeling."],
+explain:"“Humans label data for training” → Ground Truth. “Humans review low-confidence predictions” → A2I."},
+
+{id:"ai1-14",src:"ai",domain:1,type:"single",
+stem:"A lender uses Amazon Textract to extract fields from loan applications. When extraction confidence is below 90%, the company wants a person to review and correct the result before it is used.\n\nWhich service provides this workflow with the LEAST custom development?",
+choices:["Amazon SageMaker Ground Truth","Amazon Augmented AI (Amazon A2I)","Amazon Comprehend","Amazon SageMaker Model Monitor"],answer:1,
+why:["Focused on labeling datasets for training, not routing live predictions for review.","Provides built-in human review workflows, including a direct integration with Textract, triggered by conditions such as low confidence.","NLP analysis — no human review workflow.","Detects drift in deployed models; it doesn’t route individual predictions to people."],
+explain:"Human-in-the-loop review of individual predictions → Amazon A2I."},
+
+{id:"ai1-15",src:"ai",domain:1,type:"single",
+stem:"Several teams build different models that use the same customer features (e.g., 30-day spend, visit count). They find that features are computed differently in training versus in production, causing inconsistent predictions.\n\nWhich SageMaker capability addresses this?",
+choices:["SageMaker Feature Store","SageMaker Experiments","SageMaker Model Registry","SageMaker Autopilot"],answer:0,
+why:["A central repository to create, store, share, and reuse features, with an offline store for training and an online store for low-latency inference — keeping them consistent.","Tracks and compares training runs; doesn’t serve features.","Versions and approves models, not features.","Automates model building; doesn’t manage shared features."],
+explain:"“Reuse features across teams / avoid training–serving skew” → Feature Store."},
+
+{id:"ai1-16",src:"ai",domain:1,type:"single",
+stem:"A retailer’s demand model was accurate at launch, but its accuracy has declined over several months as shopping behavior changed. The team wants to detect such problems automatically and get alerts.\n\nWhich service should they use?",
+choices:["SageMaker Model Monitor","SageMaker Debugger","SageMaker Data Wrangler","AWS CloudTrail"],answer:0,
+why:["Continuously compares production data and predictions against a baseline to detect data quality, model quality, bias, and feature attribution drift, with alerts via CloudWatch.","Monitors training jobs, not deployed models.","Prepares data before training.","Records API calls for auditing. It doesn’t evaluate model quality."],
+explain:"“Model degraded over time in production” → SageMaker Model Monitor."},
+
+{id:"ai1-17",src:"ai",domain:1,type:"single",
+stem:"Fraudsters change tactics, so transactions that looked legitimate last year are now often fraudulent, even though the input feature distributions look the same.\n\nWhat is this phenomenon called?",
+choices:["Data drift","Concept drift","Overfitting","Data leakage"],answer:1,
+why:["Data drift is a change in input distributions. The scenario says the inputs look the same.","Concept drift is a change in the relationship between inputs and the target. Same inputs, different correct answer.","A training-time problem, not a change in the world after deployment.","Information from the target leaking into training features. Not described here."],
+explain:"Both kinds of drift are reasons to monitor and retrain models in production."},
+
+{id:"ai1-18",src:"ai",domain:1,type:"single",
+stem:"A business analyst with no coding experience wants to build a model from a CSV of past customer data to predict which customers will cancel their subscription.\n\nWhich AWS service should the analyst use?",
+choices:["Amazon SageMaker Canvas","Amazon SageMaker Studio notebooks","Amazon Bedrock Agents","Amazon Comprehend"],answer:0,
+why:["A no-code visual interface to import data, build ML models, and generate predictions without writing code.","Requires writing code.","Orchestrates FM actions. Not for building tabular prediction models.","Pre-trained NLP. Can’t build a churn model from tabular data."],
+explain:"“No code / business analyst / predictions” → SageMaker Canvas."},
+
+{id:"ai1-19",src:"ai",domain:1,type:"single",
+stem:"Which of the following is a hyperparameter?",
+choices:["The weights learned by a neural network","The learning rate used during training","The model’s predictions on the test set","The bias terms learned in each layer"],answer:1,
+why:["Weights are parameters learned from data during training.","A hyperparameter is set before training to control how learning happens. Learning rate, batch size, and number of epochs are classic examples.","Outputs, not settings.","Also learned parameters."],
+explain:"Parameters are learned; hyperparameters are chosen. SageMaker automatic model tuning searches hyperparameters for you."},
+
+{id:"ai1-20",src:"ai",domain:1,type:"single",
+stem:"In the context of training a neural network, what is an epoch?",
+choices:["A single prediction made by the model","One complete pass of the entire training dataset through the model","The time needed to deploy a model to an endpoint","A subset of data used for final testing"],answer:1,
+why:["That’s an inference.","Training usually runs for multiple epochs; too many can lead to overfitting.","Unrelated to training terminology.","That’s the test set."],
+explain:"Number of epochs is a hyperparameter. Early stopping ends training when validation performance stops improving."},
+
+{id:"ai1-21",src:"ai",domain:1,type:"single",
+stem:"A data scientist derives new columns such as “day of week” and “is holiday” from a raw transaction timestamp so that a model can learn weekly patterns.\n\nWhich step of the ML process is this?",
+choices:["Feature engineering","Hyperparameter tuning","Model monitoring","Inference"],answer:0,
+why:["Creating, transforming, or selecting input variables to give the model more useful signal.","Tunes training settings, not input variables.","Happens after deployment.","Using a trained model to make predictions."],
+explain:"Feature engineering sits in the data preparation phase of the lifecycle."},
+
+{id:"ai1-22",src:"ai",domain:1,type:"single",
+stem:"Before training, a team examines their dataset’s distributions, correlations between variables, missing values, and outliers using charts and summary statistics.\n\nWhat is this activity called?",
+choices:["Exploratory data analysis (EDA)","Model evaluation","A/B testing","Transfer learning"],answer:0,
+why:["Investigating data to understand its characteristics and quality before modeling.","Evaluates a trained model, not raw data.","Compares versions with live traffic.","Reuses a pre-trained model for a new task."],
+explain:"EDA informs data cleaning and feature engineering decisions."},
+
+{id:"ai1-23",src:"ai",domain:1,type:"single",
+stem:"A hotel chain wants to analyze thousands of guest reviews to determine whether each review is positive, negative, neutral, or mixed. The company has no ML expertise.\n\nWhich AWS service is the MOST suitable?",
+choices:["Amazon Comprehend","Amazon Bedrock with a fine-tuned model","Amazon SageMaker with a custom training job","Amazon Kendra"],answer:0,
+why:["A pre-trained NLP service with built-in sentiment analysis via a simple API — no ML expertise needed.","Works, but it’s more complex and costly than needed for a narrow, standard NLP task.","Requires ML expertise to build and train.","Enterprise search, not sentiment analysis."],
+explain:"If the need is a single narrow task (sentiment, entities, translation), the purpose-built AI service usually beats a GenAI or custom build."},
+
+{id:"ai1-24",src:"ai",domain:1,type:"multi",pick:2,
+stem:"A call center wants to convert recorded customer phone calls into text and then determine customer sentiment in each conversation.\n\nWhich combination of AWS services should be used? (Select TWO.)",
+choices:["Amazon Transcribe","Amazon Polly","Amazon Comprehend","Amazon Translate","Amazon Rekognition"],answer:[0,2],
+why:["Converts speech to text.","Converts text to speech — the opposite direction.","Analyzes the resulting text for sentiment.","Translates between languages. Nothing here needs translation.","Analyzes images and video."],
+explain:"Audio → Transcribe → text → Comprehend → sentiment. (Transcribe Call Analytics can also do this for contact centers.)"},
+
+{id:"ai1-25",src:"ai",domain:1,type:"single",
+stem:"A social media platform needs to automatically detect and flag inappropriate or explicit content in images uploaded by users.\n\nWhich AWS service should it use?",
+choices:["Amazon Rekognition","Amazon Textract","Amazon Comprehend","Amazon Personalize"],answer:0,
+why:["Includes content moderation that detects inappropriate, unwanted, or offensive content in images and video.","Extracts text and data from documents.","Analyzes text, not images.","Builds recommendations."],
+explain:"“Moderate uploaded images/video” → Rekognition."},
+
+{id:"ai1-26",src:"ai",domain:1,type:"single",
+stem:"A news website wants to offer an audio version of each article so visually impaired readers can listen to the content in a natural-sounding voice.\n\nWhich AWS service should it use?",
+choices:["Amazon Transcribe","Amazon Polly","Amazon Lex","Amazon Translate"],answer:1,
+why:["Speech to text — the reverse direction.","Converts text into lifelike speech.","Builds conversational bots.","Translates text between languages."],
+explain:"Polly = text → speech. Transcribe = speech → text."},
+
+{id:"ai1-27",src:"ai",domain:1,type:"single",
+stem:"An online retailer wants to show each shopper real-time product recommendations based on their browsing and purchase history, without building ML models from scratch.\n\nWhich AWS service is the BEST fit?",
+choices:["Amazon Personalize","Amazon Forecast","Amazon Kendra","Amazon Comprehend"],answer:0,
+why:["A fully managed service for real-time personalized recommendations built on user interaction data.","Time-series forecasting, not per-user recommendations.","Enterprise search.","Text analytics."],
+explain:"“Recommendations / personalization” → Amazon Personalize."},
+
+{id:"ai1-28",src:"ai",domain:1,type:"single",
+stem:"A clinic wants a voice and chat bot that lets patients book appointments. The bot must recognize the patient’s intent and collect required details such as date, time, and doctor name, and integrate with Amazon Connect.\n\nWhich AWS service should be used?",
+choices:["Amazon Lex","Amazon Polly","Amazon Q Developer","Amazon Transcribe"],answer:0,
+why:["Builds conversational interfaces using intents and slots (the details to collect), with native Amazon Connect integration.","Only produces speech output.","A coding assistant.","Only converts speech to text; no conversation management."],
+explain:"Intents, slots, and conversation flow are Lex vocabulary."},
+
+{id:"ai1-29",src:"ai",domain:1,type:"single",
+stem:"A global company wants its support chat to automatically convert customer messages written in Spanish, Japanese, and German into English for agents in real time.\n\nWhich AWS service should be used?",
+choices:["Amazon Translate","Amazon Comprehend","Amazon Transcribe","Amazon Textract"],answer:0,
+why:["Neural machine translation between languages, in real time or batch.","Can detect the language, but doesn’t translate it.","Converts speech to text.","Extracts text from documents."],
+explain:"“Translate content into multiple languages” → Amazon Translate."},
+
+{id:"ai1-30",src:"ai",domain:1,type:"match",
+stem:"Match each scenario to the type of machine learning. Each type may be used once or not at all. (Select THREE.)",
+prompts:["Group customers by purchasing behavior when no customer categories are known in advance","Predict whether a transaction is fraudulent using past transactions labeled as fraud or not fraud","A warehouse robot learns the best route by receiving rewards for fast deliveries and penalties for collisions"],
+options:["Supervised learning","Unsupervised learning","Reinforcement learning","Semi-supervised learning"],answer:[1,0,2],
+why:["Learns from labeled examples to predict a known target.","Finds structure in unlabeled data, such as clusters.","An agent learns a policy through trial and error with rewards and penalties.","Combines a small labeled set with a large unlabeled set. Not described in any scenario."],
+explain:"Trigger words: labels → supervised; no labels / group similar → unsupervised; agent, reward, trial and error → reinforcement."},
+
+{id:"ai1-31",src:"ai",domain:1,type:"single",
+stem:"A subscription company wants to predict whether each customer will cancel next month (yes or no).\n\nWhat type of ML problem is this?",
+choices:["Binary classification","Regression","Clustering","Dimensionality reduction"],answer:0,
+why:["Predicting one of two categories is binary classification.","Regression predicts a continuous value, like how much a customer will spend.","Clustering groups unlabeled data; the outcome here is a known label.","Reduces feature count; doesn’t predict an outcome."],
+explain:"Two classes → binary classification. More than two → multi-class. A number → regression."},
+
+{id:"ai1-32",src:"ai",domain:1,type:"single",
+stem:"A team compares two binary classifiers and wants a single metric that shows how well each model separates the positive and negative classes across all possible decision thresholds.\n\nWhich metric should they use?",
+choices:["Area under the ROC curve (AUC)","Accuracy at a 0.5 threshold","Mean absolute error (MAE)","BLEU score"],answer:0,
+why:["AUC summarizes performance across all thresholds; closer to 1 is better, 0.5 is random guessing.","Reflects a single threshold only.","A regression metric.","A text-generation metric for translation."],
+explain:"AUC is threshold-independent, which makes it good for comparing classifiers."},
+
+{id:"ai1-33",src:"ai",domain:1,type:"single",
+stem:"A dataset is split into training, validation, and test sets.\n\nWhat is the purpose of the test set?",
+choices:["To learn the model’s weights","To tune hyperparameters and choose between model versions","To provide an unbiased final estimate of performance on unseen data","To store extra training data in case more is needed"],answer:2,
+why:["That’s the training set.","That’s the validation set.","The test set is held out and used only at the end. Using it earlier leaks information and inflates results.","Mixing test data into training defeats its purpose."],
+explain:"Keep the three sets separate; mixing them is data leakage."},
+
+{id:"ai1-34",src:"ai",domain:1,type:"single",
+stem:"A fraud model scored extremely well in development but performs poorly in production. Investigation shows a training feature called “chargeback_filed,” which is only populated after fraud has been confirmed.\n\nWhat caused the problem?",
+choices:["Underfitting","Data (target) leakage","Concept drift","Insufficient compute during training"],answer:1,
+why:["Underfitting would show poor development results too.","The feature carries information about the answer that isn’t available at prediction time, so the model “cheated” in development.","Drift is a change over time in production; this is a flaw in how the training data was built.","Compute affects training speed, not this pattern of results."],
+explain:"Only use features that are available at the moment of prediction."},
+
+{id:"ai1-35",src:"ai",domain:1,type:"multi",pick:2,
+stem:"In which situations is AI/ML generally NOT the appropriate solution? (Select TWO.)",
+choices:["Tax must be calculated exactly according to a published formula, and every result must be fully auditable","There is no historical data, and the cost of building a model exceeds the expected benefit","Patterns in customer behavior are too complex to express as hand-written rules","Millions of product images must be categorized","Content must be personalized for millions of users"],answer:[0,1],
+why:["ML predictions are probabilistic. A known formula with exact, auditable outputs is better served by deterministic code.","No data to learn from and negative ROI — a poor fit for ML.","Complex patterns that resist rules are exactly where ML shines.","Large-scale image classification is a strong ML use case.","Personalization at scale is a classic ML use case."],
+explain:"Use ML when rules can’t capture the pattern, you have representative data, and some error is acceptable."},
+
+{id:"ai1-36",src:"ai",domain:1,type:"single",
+stem:"An ML team wants to automate its workflow — data processing, training, evaluation, and conditional model registration — so it runs the same way every time new data arrives.\n\nWhich SageMaker feature should they use?",
+choices:["SageMaker Pipelines","SageMaker Clarify","SageMaker Ground Truth","SageMaker Canvas"],answer:0,
+why:["Orchestrates repeatable, automated ML workflows as a series of steps — the MLOps/CI-CD piece of SageMaker.","Detects bias and explains predictions.","Labels data.","No-code model building for analysts, not workflow orchestration."],
+explain:"MLOps goals: repeatable processes, automation, version control, monitoring, and retraining. Pipelines is the orchestration tool."},
+
+{id:"ai1-37",src:"ai",domain:1,type:"single",
+stem:"A company’s governance policy requires that every model version is cataloged with its metrics and must be explicitly approved before it can be deployed to production.\n\nWhich SageMaker capability supports this requirement?",
+choices:["SageMaker Model Registry","SageMaker Feature Store","SageMaker Debugger","SageMaker JumpStart"],answer:0,
+why:["Catalogs model versions, stores metadata and metrics, and manages approval status for deployment.","Manages features, not model versions.","Monitors training jobs.","Provides pre-trained models and solution templates."],
+explain:"“Manage model versions / approval before production” → Model Registry."},
+
+{id:"ai1-38",src:"ai",domain:1,type:"single",
+stem:"A factory has 500,000 labeled photos of products marked “defective” or “not defective” and wants to automatically inspect new product photos.\n\nWhich approach is MOST appropriate?",
+choices:["Deep learning with a convolutional neural network","Linear regression","K-means clustering","Association rule learning"],answer:0,
+why:["Deep learning excels at unstructured image data where hand-crafted features don’t scale. (Amazon Rekognition Custom Labels is a managed alternative.)","Predicts continuous values from tabular data; not suited to raw images.","Unsupervised — ignores the labels that are available.","Finds co-occurrence patterns in transactions."],
+explain:"Unstructured data (images, audio, text) at scale → deep learning."},
+
+{id:"ai1-39",src:"ai",domain:1,type:"single",
+stem:"A company deployed a product recommendation model. Leadership asks how to measure whether the model is creating business value.\n\nWhich metric BEST answers that question?",
+choices:["F1 score of the model","Area under the ROC curve","Average revenue per user (ARPU) compared with a control group","Training loss"],answer:2,
+why:["A model-quality metric; it doesn’t show business impact.","Also a model-quality metric.","A business metric tied to ROI. Comparing against a control group (A/B test) isolates the model’s impact.","Describes the training process, not business value."],
+explain:"Business impact ≠ model quality. ROI questions want metrics like conversion rate, ARPU, customer lifetime value, or cost savings."},
+
+{id:"ai1-40",src:"ai",domain:1,type:"single",
+stem:"A startup wants to deploy an open-source, pre-trained computer vision model on SageMaker infrastructure with minimal effort, and fine-tune it later on its own data.\n\nWhich SageMaker capability should it use?",
+choices:["SageMaker JumpStart","SageMaker Ground Truth","SageMaker Model Monitor","SageMaker Data Wrangler"],answer:0,
+why:["A hub of pre-trained open-source models and solutions that can be deployed or fine-tuned in a few clicks.","Labels data.","Monitors deployed models.","Prepares data."],
+explain:"“Quickly deploy a pre-trained open-source model / one-click deploy” → JumpStart."},
+
+{id:"ai1-41",src:"ai",domain:1,type:"single",
+stem:"A medical imaging company has 1,000 labeled scans and 100,000 unlabeled scans. Labeling more is expensive because it requires specialists.\n\nWhich learning approach makes the BEST use of this data?",
+choices:["Semi-supervised learning","Reinforcement learning","Purely unsupervised learning","Supervised learning on the 1,000 labeled scans only"],answer:0,
+why:["Combines a small labeled set with a large unlabeled set — built for “limited labeled data.”","Requires an environment with rewards, not a dataset of scans.","Ignores the valuable labels.","Throws away 99% of the data."],
+explain:"Trigger phrase: “limited labeled data, lots of unlabeled data” → semi-supervised."},
+
+{id:"ai1-42",src:"ai",domain:1,type:"single",
+stem:"An operations team wants to detect unusual spikes in server metrics in near real time. The data has no labels identifying which points are anomalies.\n\nWhich SageMaker built-in algorithm is designed for this?",
+choices:["Random Cut Forest (RCF)","XGBoost","Linear Learner","Sequence-to-Sequence"],answer:0,
+why:["An unsupervised algorithm that assigns anomaly scores to data points without needing labels.","A supervised algorithm that needs labeled data.","Supervised regression/classification.","For translating sequences, such as text."],
+explain:"Anomaly detection with no labels → unsupervised → Random Cut Forest."}
+];
+
+</script>
+<script>
+(function(){
+const DOMAINS={1:"Fundamentals of AI and ML",2:"Fundamentals of Generative AI",3:"Applications of Foundation Models",4:"Guidelines for Responsible AI",5:"Security, Compliance, and Governance"};
+const ALL=[...TD_QUESTIONS,...AI_QUESTIONS];
+const BY_ID=Object.fromEntries(ALL.map(q=>[q.id,q]));
+const KEY="aif-drill-v1";
+const LETTERS="ABCDEFGH";
+
+let store={answers:{},src:"all",domain:"all",missedOnly:false,shuffle:false,current:null};
+try{const s=JSON.parse(localStorage.getItem(KEY)||"null");if(s)store=Object.assign(store,s);}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(store));}catch(e){}}
+
+const draft={}; // unsubmitted selections per question id
+const orderCache={}; // shuffled display order per question
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+function paras(s){return s.split(/\n\n+/).map(p=>"<p>"+esc(p)+"</p>").join("");}
+function shuffled(n,seed){const a=[...Array(n).keys()];for(let i=n-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function displayOrder(q,n){
+  if(!store.shuffle) return [...Array(n).keys()];
+  if(!orderCache[q.id]) orderCache[q.id]=shuffled(n);
+  return orderCache[q.id];
+}
+
+function filtered(){
+  return ALL.filter(q=>(store.src==="all"||q.src===store.src)
+    &&(store.domain==="all"||String(q.domain)===store.domain)
+    &&(!store.missedOnly||(store.answers[q.id]&&!store.answers[q.id].correct)));
+}
+
+function grade(q,resp){
+  if(q.type==="single") return {correct:resp===q.answer,got:resp===q.answer?1:0,total:1};
+  if(q.type==="multi"){const a=[...q.answer].sort().join(),r=[...resp].sort().join();return {correct:a===r,got:resp.filter(x=>q.answer.includes(x)).length,total:q.answer.length};}
+  if(q.type==="match"){const got=q.answer.filter((a,i)=>resp[i]===a).length;return {correct:got===q.answer.length,got,total:q.answer.length};}
+  if(q.type==="order"){const got=q.answer.filter((a,i)=>resp[i]===a).length;return {correct:got===q.answer.length,got,total:q.answer.length};}
+}
+
+function renderStats(){
+  const pool=ALL.filter(q=>(store.src==="all"||q.src===store.src)&&(store.domain==="all"||String(q.domain)===store.domain));
+  let a=0,ok=0;pool.forEach(q=>{const r=store.answers[q.id];if(r){a++;if(r.correct)ok++;}});
+  sAns.textContent=a;sOk.textContent=ok;sMiss.textContent=a-ok;sAcc.textContent=a?Math.round(ok/a*100)+"%":"–";
+  subline.textContent=pool.length+" review questions with explanations for every choice.";
+}
+
+function renderControls(){
+  document.querySelectorAll("#srcSeg button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.src===store.src));
+  cAll.textContent=ALL.length;cTd.textContent=TD_QUESTIONS.length;cAi.textContent=AI_QUESTIONS.length;
+  const srcPool=ALL.filter(q=>store.src==="all"||q.src===store.src);
+  const doms=[...new Set(srcPool.map(q=>q.domain))].sort();
+  if(store.domain!=="all"&&!doms.includes(+store.domain)) store.domain="all";
+  domainSel.innerHTML='<option value="all">All domains ('+srcPool.length+')</option>'+doms.map(d=>'<option value="'+d+'">Domain '+d+': '+DOMAINS[d]+' ('+srcPool.filter(q=>q.domain===d).length+')</option>').join("");
+  domainSel.value=store.domain;
+  missedOnly.checked=store.missedOnly;shuffle.checked=store.shuffle;
+}
+
+function renderGrid(list){
+  if(!list.length){grid.innerHTML='<p class="empty-grid">No questions match these filters.</p>';gridNote.textContent="";return;}
+  grid.innerHTML=list.map((q,i)=>{const r=store.answers[q.id];const cls=[r?(r.correct?"ok":"miss"):"",q.id===store.current?"cur":"",q.src==="ai"&&store.src==="all"?"ai":""].join(" ");
+    return '<button class="'+cls+'" data-id="'+q.id+'" aria-label="Question '+(i+1)+(r?(r.correct?", correct":", missed"):", unanswered")+(q.src==="ai"?", AI-generated":", Tutorials Dojo")+'">'+(i+1)+'</button>';}).join("");
+  gridNote.textContent=store.src==="all"?"Amber dot marks AI-generated questions.":"";
+}
+
+function instruction(q){
+  if(q.type==="single") return "Choose one answer.";
+  if(q.type==="multi") return "Choose "+q.pick+" answers.";
+  if(q.type==="match") return "Pick a match for each item from the dropdowns.";
+  return "Choose an item for each step, in order.";
+}
+
+function renderCard(){
+  const list=filtered();
+  renderStats();renderGrid(list);
+  if(!list.length){
+    card.innerHTML='<div class="emptystate"><h2>Nothing to show</h2><p>'+(store.missedOnly?"You have no missed questions under these filters. Turn off “Show missed only” to see everything.":"No questions match the current source and domain. Try a different combination.")+'</p></div>';return;
+  }
+  let idx=list.findIndex(q=>q.id===store.current);
+  if(idx<0){idx=0;store.current=list[0].id;save();renderGrid(list);}
+  const q=list[idx];const done=store.answers[q.id];
+  const resp=done?done.resp:(draft[q.id]!==undefined?draft[q.id]:(q.type==="single"?null:q.type==="multi"?[]:q.type==="match"?q.prompts.map(()=>-1):Array(q.steps).fill(-1)));
+  draft[q.id]=resp;
+
+  let h='<div class="meta"><span class="qnum">Question '+(idx+1)+' of '+list.length+'</span><span class="tag">Domain '+q.domain+': '+DOMAINS[q.domain]+'</span><span class="tag '+(q.src==="ai"?"src-ai":"")+'">'+(q.src==="ai"?"AI-generated":"Tutorials Dojo")+'</span></div>';
+  h+='<div class="stem">'+paras(q.stem)+'</div><p class="instr">'+instruction(q)+'</p>';
+
+  if(q.type==="single"||q.type==="multi"){
+    const ord=displayOrder(q,q.choices.length);
+    h+='<ul class="choices">'+ord.map((ci,pos)=>{
+      const sel=q.type==="single"?resp===ci:resp.includes(ci);
+      const isAns=q.type==="single"?q.answer===ci:q.answer.includes(ci);
+      let cls="choice "+(q.type==="single"?"radio":"check");
+      if(done){if(isAns)cls+=" right";else if(sel)cls+=" wrong";}else if(sel)cls+=" sel";
+      const lab=done?(isAns?"Correct answer":(sel?"Your answer — incorrect":"Incorrect")):"";
+      return '<li><button class="'+cls+'" data-ci="'+ci+'" '+(done?"disabled":"")+' role="'+(q.type==="single"?"radio":"checkbox")+'" aria-checked="'+sel+'"><span class="mark">'+(done?(isAns?"✓":(sel?"✕":LETTERS[pos])):LETTERS[pos])+'</span><span class="body">'+esc(q.choices[ci])+(done?'<span class="why"><b>'+lab+'.</b> '+esc(q.why[ci])+'</span>':'')+'</span></button></li>';
+    }).join("")+'</ul>';
+  }
+  if(q.type==="match"){
+    const ord=displayOrder(q,q.options.length);
+    h+=q.prompts.map((p,pi)=>{
+      let cls="matchrow";if(done)cls+=resp[pi]===q.answer[pi]?" right":" wrong";
+      return '<div class="'+cls+'"><label class="p" for="m'+pi+'">'+esc(p)+'</label><select id="m'+pi+'" data-pi="'+pi+'" '+(done?"disabled":"")+'><option value="-1">Select…</option>'+ord.map(oi=>'<option value="'+oi+'" '+(resp[pi]===oi?"selected":"")+'>'+esc(q.options[oi])+'</option>').join("")+'</select>'+(done&&resp[pi]!==q.answer[pi]?'<div class="fix">Correct match: '+esc(q.options[q.answer[pi]])+'</div>':'')+'</div>';
+    }).join("");
+    if(done) h+='<div class="pool"><h3>Every option explained</h3><ul>'+q.options.map((o,oi)=>'<li><b>'+esc(o)+(q.answer.includes(oi)?"":" (not used)")+'</b><span class="why">'+esc(q.why[oi])+'</span></li>').join("")+'</ul></div>';
+  }
+  if(q.type==="order"){
+    const ord=displayOrder(q,q.items.length);
+    h+='<div class="pool" style="border:0;margin:0;padding:0"><h3>Available steps</h3><ul>'+ord.map(ii=>'<li>'+esc(q.items[ii])+'</li>').join("")+'</ul></div><div style="margin-top:16px">';
+    h+=resp.map((r,si)=>{
+      let cls="matchrow step";if(done)cls+=r===q.answer[si]?" right":" wrong";
+      return '<div class="'+cls+'"><label class="p" for="o'+si+'"><b>Step '+(si+1)+'</b></label><select id="o'+si+'" data-si="'+si+'" '+(done?"disabled":"")+'><option value="-1">Select…</option>'+ord.map(ii=>'<option value="'+ii+'" '+(r===ii?"selected":"")+'>'+esc(q.items[ii])+'</option>').join("")+'</select>'+(done&&r!==q.answer[si]?'<div class="fix">Correct step: '+esc(q.items[q.answer[si]])+'</div>':'')+'</div>';
+    }).join("")+'</div>';
+    if(done) h+='<div class="pool"><h3>Every option explained</h3><ul>'+q.items.map((it,ii)=>'<li><b>'+esc(it)+'</b><span class="why">'+esc(q.why[ii])+'</span></li>').join("")+'</ul></div>';
+  }
+
+  if(done){
+    const g=grade(q,done.resp);
+    h+='<div class="feedback '+(done.correct?"ok":"miss")+'"><h3>'+(done.correct?"Correct":"Incorrect")+(g.total>1?" · "+g.got+" / "+g.total+" points":"")+'</h3><p>'+esc(q.explain)+'</p></div>';
+  }
+
+  const ready=q.type==="single"?resp!==null:q.type==="multi"?resp.length===q.pick:resp.every(x=>x>=0);
+  h+='<div class="nav"><button class="btn" id="prevBtn" '+(idx===0?"disabled":"")+'>Previous</button><span class="spacer"></span>';
+  if(done) h+='<button class="btn" id="retryBtn">Try again</button>';
+  else h+='<button class="btn primary" id="checkBtn" '+(ready?"":"disabled")+'>Check answer</button>';
+  h+='<button class="btn '+(done?"primary":"")+'" id="nextBtn" '+(idx===list.length-1?"disabled":"")+'>Next</button></div>';
+  h+='<p class="kbd"><kbd>←</kbd> <kbd>→</kbd> move between questions · <kbd>A</kbd>–<kbd>E</kbd> pick a choice · <kbd>Enter</kbd> check answer</p>';
+  card.innerHTML=h;
+
+  // events
+  card.querySelectorAll(".choice").forEach(b=>b.onclick=()=>{
+    const ci=+b.dataset.ci;
+    if(q.type==="single") draft[q.id]=ci;
+    else{const s=draft[q.id];const k=s.indexOf(ci);if(k>=0)s.splice(k,1);else if(s.length<q.pick)s.push(ci);else{s.shift();s.push(ci);}}
+    renderCard();
+  });
+  card.querySelectorAll("select[data-pi]").forEach(s=>s.onchange=()=>{draft[q.id][+s.dataset.pi]=+s.value;renderCard();document.getElementById(s.id)?.focus();});
+  card.querySelectorAll("select[data-si]").forEach(s=>s.onchange=()=>{draft[q.id][+s.dataset.si]=+s.value;renderCard();document.getElementById(s.id)?.focus();});
+  const cb=document.getElementById("checkBtn");if(cb)cb.onclick=()=>check(q);
+  const rb=document.getElementById("retryBtn");if(rb)rb.onclick=()=>{delete store.answers[q.id];delete draft[q.id];delete orderCache[q.id];save();renderCard();};
+  document.getElementById("prevBtn").onclick=()=>go(-1);
+  document.getElementById("nextBtn").onclick=()=>go(1);
+}
+
+function check(q){
+  const resp=draft[q.id];
+  const ready=q.type==="single"?resp!==null:q.type==="multi"?resp.length===q.pick:resp.every(x=>x>=0);
+  if(!ready)return;
+  const g=grade(q,resp);
+  store.answers[q.id]={resp:JSON.parse(JSON.stringify(resp)),correct:g.correct};save();renderCard();
+}
+function go(d){
+  const list=filtered();const i=list.findIndex(q=>q.id===store.current);const n=i+d;
+  if(n<0||n>=list.length)return;store.current=list[n].id;save();renderCard();window.scrollTo({top:0});
+}
+
+// controls
+document.querySelectorAll("#srcSeg button").forEach(b=>b.onclick=()=>{store.src=b.dataset.src;save();renderControls();renderCard();});
+domainSel.onchange=()=>{store.domain=domainSel.value;save();renderCard();};
+missedOnly.onchange=()=>{store.missedOnly=missedOnly.checked;save();renderCard();};
+shuffle.onchange=()=>{store.shuffle=shuffle.checked;for(const k in orderCache)delete orderCache[k];save();renderCard();};
+grid.onclick=e=>{const b=e.target.closest("button[data-id]");if(!b)return;store.current=b.dataset.id;save();renderCard();if(window.innerWidth<=900){ctrl.open=false;card.scrollIntoView({behavior:"smooth"});}};
+resetBtn.onclick=()=>{if(!confirm("Clear all answers and start over?"))return;store.answers={};for(const k in draft)delete draft[k];save();renderCard();};
+
+resultsBtn.onclick=()=>{
+  const pool=ALL.filter(q=>(store.src==="all"||q.src===store.src)&&(store.domain==="all"||String(q.domain)===store.domain));
+  const ans=pool.filter(q=>store.answers[q.id]);const ok=ans.filter(q=>store.answers[q.id].correct);
+  const row=(label,qs)=>{const a=qs.filter(q=>store.answers[q.id]);const o=a.filter(q=>store.answers[q.id].correct);const pct=a.length?Math.round(o.length/a.length*100):0;
+    return '<div class="bar"><span>'+esc(label)+'</span><span class="n">'+o.length+' / '+a.length+'</span><div class="track"><div class="fill" style="width:'+pct+'%"></div></div></div>';};
+  const doms=[...new Set(pool.map(q=>q.domain))].sort();
+  const missed=pool.filter(q=>store.answers[q.id]&&!store.answers[q.id].correct);
+  let h='<h2>Your results</h2><p style="margin:0;color:var(--muted)">'+ans.length+' of '+pool.length+' questions answered</p>';
+  h+='<div class="big">'+(ans.length?Math.round(ok.length/ans.length*100)+"%":"–")+'</div><p style="margin:0;color:var(--muted)">'+ok.length+' correct, '+(ans.length-ok.length)+' missed. AWS scales scores to 100–1,000 and requires 700 to pass, so aim for 80% or more here.</p>';
+  h+='<h3 style="margin:22px 0 0;font-size:1rem">By domain</h3><div class="bars">'+doms.map(d=>row("Domain "+d+": "+DOMAINS[d],pool.filter(q=>q.domain===d))).join("")+'</div>';
+  if(store.src==="all") h+='<h3 style="margin:10px 0 0;font-size:1rem">By source</h3><div class="bars">'+row("Tutorials Dojo",pool.filter(q=>q.src==="td"))+row("AI-generated",pool.filter(q=>q.src==="ai"))+'</div>';
+  if(missed.length) h+='<h3 style="margin:10px 0 0;font-size:1rem">Missed questions</h3><ol class="missed-list">'+missed.map(q=>'<li><button data-id="'+q.id+'">'+esc(q.stem.split("\n\n").slice(-1)[0].slice(0,110))+'…</button></li>').join("")+'</ol>';
+  h+='<div class="row">'+(missed.length?'<button class="btn" id="reviewMissed">Review missed only</button>':'')+'<button class="btn primary" id="closeRes">Close</button></div>';
+  resultsBody.innerHTML=h;results.showModal();
+  closeRes.onclick=()=>results.close();
+  const rm=document.getElementById("reviewMissed");if(rm)rm.onclick=()=>{store.missedOnly=true;store.current=missed[0].id;save();renderControls();renderCard();results.close();};
+  resultsBody.querySelectorAll(".missed-list button").forEach(b=>b.onclick=()=>{store.current=b.dataset.id;save();results.close();renderCard();});
+};
+
+document.addEventListener("keydown",e=>{
+  if(results.open||e.target.tagName==="SELECT"||e.metaKey||e.ctrlKey||e.altKey)return;
+  if(e.key==="ArrowRight")go(1);else if(e.key==="ArrowLeft")go(-1);
+  else if(e.key==="Enter"&&!e.target.closest("button")){const cb=document.getElementById("checkBtn");if(cb&&!cb.disabled)cb.click();}
+  else{const i=LETTERS.indexOf(e.key.toUpperCase());if(i>=0&&i<8){const btns=card.querySelectorAll(".choice:not(:disabled)");if(btns[i])btns[i].click();}}
+});
+
+if(window.innerWidth<=900)ctrl.open=false;
+renderControls();renderCard();
+})();
+</script>
+</body>
+</html>
